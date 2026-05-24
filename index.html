@@ -7,1164 +7,205 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#ffffff;--bg2:#f7f7f5;--border:#e0e0da;
-  --text:#1a1a1a;--dim:#777770;--accent:#1a1a1a;
-  --good:#2d6a2d;--warn:#b07800;--bad:#b02020;
-  --line:1px solid var(--border);
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;min-height:100vh;overflow-x:hidden;}
-body{padding:clamp(16px,4vw,40px);display:flex;flex-direction:column;align-items:center;}
-.container{width:100%;max-width:720px;}
-
-/* ── NAME SCREEN ── */
-#screen-name{display:flex;flex-direction:column;justify-content:center;min-height:100vh;gap:24px;}
-.school-label{font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
-.big-title{font-family:'Fraunces',serif;font-size:clamp(28px,6vw,42px);font-weight:700;line-height:1.2;}
-.sub{font-size:13px;color:var(--dim);line-height:1.7;}
-.field-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
-input[type=text]{width:100%;border:var(--line);border-radius:0;background:var(--bg);color:var(--text);
-  font-family:'JetBrains Mono',monospace;font-size:16px;padding:12px 14px;outline:none;transition:border-color .2s;}
-input[type=text]:focus{border-color:var(--text);}
-.btn{display:block;width:100%;background:var(--text);color:var(--bg);border:none;
-  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;letter-spacing:.08em;
-  padding:14px 24px;cursor:pointer;transition:opacity .15s;min-height:48px;}
-.btn:hover{opacity:.85;}
-.btn:disabled{opacity:.35;cursor:not-allowed;}
-.btn.ghost{background:transparent;color:var(--text);border:var(--line);}
-.btn.sm{font-size:12px;padding:10px 16px;min-height:40px;}
-
-/* ── HUB SCREEN ── */
-#screen-hub{display:none;flex-direction:column;gap:32px;padding-top:24px;padding-bottom:60px;}
-.hub-header{border-bottom:var(--line);padding-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px;}
-.hub-name{font-family:'Fraunces',serif;font-size:clamp(20px,4vw,28px);font-weight:600;}
-.hub-actions{display:flex;gap:8px;}
-.section-title{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:12px;}
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
-.topic-card{border:var(--line);padding:14px 16px;cursor:pointer;transition:background .15s;position:relative;}
-.topic-card:hover{background:var(--bg2);}
-.topic-card .tc-title{font-size:13px;font-weight:700;margin-bottom:4px;}
-.topic-card .tc-meta{font-size:11px;color:var(--dim);}
-.topic-card .tc-badge{position:absolute;top:10px;right:10px;font-size:10px;padding:2px 6px;background:var(--good);color:#fff;}
-.exam-list{display:flex;flex-direction:column;gap:8px;}
-.exam-row{border:var(--line);padding:14px 16px;cursor:pointer;transition:background .15s;
-  display:flex;justify-content:space-between;align-items:center;gap:12px;}
-.exam-row:hover{background:var(--bg2);}
-.exam-row .er-left .er-title{font-size:14px;font-weight:700;}
-.exam-row .er-left .er-meta{font-size:11px;color:var(--dim);margin-top:3px;}
-.exam-row .er-status{font-size:11px;color:var(--dim);text-align:right;white-space:nowrap;}
-.circuit-banner{border:var(--line);padding:20px;cursor:pointer;transition:background .15s;display:flex;justify-content:space-between;align-items:center;}
-.circuit-banner:hover{background:var(--bg2);}
-.circuit-banner .cb-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;}
-.circuit-banner .cb-meta{font-size:11px;color:var(--dim);margin-top:4px;}
-
-/* ── QUIZ WRAPPER (for examinations) ── */
-#screen-exam{display:none;flex-direction:column;gap:0;min-height:100vh;}
-.exam-header{padding:16px 0;border-bottom:var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
-.exam-header .eh-left .eh-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);}
-.exam-header .eh-left .eh-title{font-family:'Fraunces',serif;font-size:clamp(16px,3vw,22px);font-weight:600;margin-top:2px;}
-.exam-header .eh-right{text-align:right;}
-.timer-big{font-size:clamp(24px,5vw,32px);font-weight:700;letter-spacing:.05em;transition:color .3s;}
-.timer-big.warn{color:var(--warn);}
-.timer-big.bad{color:var(--bad);animation:blink 1s infinite;}
-@keyframes blink{50%{opacity:.4;}}
-.timer-bar{height:3px;background:var(--border);margin-bottom:24px;}
-.timer-bar .fill{height:100%;background:var(--text);transition:width 1s linear,background .3s;}
-.timer-bar .fill.warn{background:var(--warn);}
-.timer-bar .fill.bad{background:var(--bad);}
-.q-progress{font-size:11px;color:var(--dim);letter-spacing:.1em;margin-bottom:20px;}
-.q-text{font-family:'Fraunces',serif;font-size:clamp(16px,3.5vw,20px);line-height:1.6;margin-bottom:28px;color:var(--text);}
-.q-text .sit{font-size:13px;font-style:italic;color:var(--dim);display:block;margin-bottom:12px;line-height:1.6;border-left:3px solid var(--border);padding-left:12px;}
-.choices{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
-.choice{border:var(--line);padding:12px 16px;cursor:pointer;transition:background .12s,border-color .12s;
-  display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;}
-.choice:hover{background:var(--bg2);}
-.choice.selected{border-color:var(--text);background:var(--bg2);}
-.choice .ch-letter{font-weight:700;min-width:16px;}
-.flag-bar{font-size:11px;color:var(--dim);border-top:var(--line);padding-top:12px;margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap;}
-.flag-item span{color:var(--warn);}
-
-/* ── RESULT SCREEN ── */
-#screen-result{display:none;flex-direction:column;padding-top:40px;gap:24px;}
-.result-title{font-family:'Fraunces',serif;font-size:clamp(22px,5vw,32px);font-weight:700;}
-.result-score{font-size:clamp(48px,12vw,80px);font-weight:700;font-family:'Fraunces',serif;line-height:1;}
-.result-score .rs-total{font-size:.5em;color:var(--dim);}
-.result-meta{font-size:13px;color:var(--dim);line-height:1.8;}
-.result-flags{font-size:12px;color:var(--warn);margin-top:4px;}
-.btn-row{display:flex;gap:8px;flex-wrap:wrap;}
-
-/* ── CIRCUIT SCREEN ── */
-#screen-circuit{display:none;flex-direction:column;min-height:100vh;}
-/* reuse circuit styles inline via injected style */
-
-/* ── SUMMARY SCREEN ── */
-#screen-summary{display:none;flex-direction:column;gap:16px;padding-top:24px;padding-bottom:60px;}
-.summary-dump{font-size:11px;line-height:1.8;white-space:pre-wrap;word-break:break-all;
-  background:var(--bg2);border:var(--line);padding:16px;max-height:60vh;overflow-y:auto;}
-.copy-note{font-size:11px;color:var(--dim);}
-
-/* ── BROWSER BLOCK ── */
-#screen-block{display:none;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;text-align:center;gap:16px;}
-#screen-block h1{font-family:'Fraunces',serif;font-size:clamp(24px,6vw,40px);}
-#screen-block p{font-size:14px;color:var(--dim);max-width:420px;line-height:1.7;}
-
-@media(max-width:480px){
-  .card-grid{grid-template-columns:1fr 1fr;}
-  .btn-row{flex-direction:column;}
-}
-</style>
+:root{\n  --bg:#ffffff;--bg2:#f7f7f5;--border:#e0e0da;\n  --text:#1a1a1a;--dim:#777770;--accent:#1a1a1a;\n  --good:#2d6a2d;--warn:#b07800;--bad:#b02020;\n  --line:1px solid var(--border);\n}\n*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}\nhtml,body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;min-height:100vh;overflow-x:hidden;}\nbody{padding:clamp(16px,4vw,40px);display:flex;flex-direction:column;align-items:center;}\n.container{width:100%;max-width:640px;display:none;}\n.active{display:block;}\nh1,h2,h3{font-family:'Fraunces',serif;font-weight:600;color:var(--text);}\n.hub-header{margin-bottom:32px;border-bottom:var(--line);padding-bottom:16px;width:100%;}\n.hub-header h1{font-size:32px;margin-bottom:4px;}\n.student-bar{display:flex;gap:12px;align-items:center;margin-top:12px;font-size:13px;}\ninput[type=\"text\"]{background:var(--bg2);border:var(--line);padding:8px 12px;font-family:inherit;font-size:14px;color:var(--text);outline:none;width:100%;max-width:240px;}\nbutton{background:var(--accent);color:#fff;border:none;padding:8px 16px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity 0.2s;}\nbutton:hover{opacity:0.8;}\n.btn-secondary{background:transparent;color:var(--text);border:var(--line);}\n.grid{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:32px;}\n@media(min-width:480px){.grid{grid-template-columns:1fr 1fr;}}\n.card{background:var(--bg2);border:var(--line);padding:20px;display:flex;flex-direction:column;justify-content:between;position:relative;}\n.card h3{font-size:18px;margin-bottom:8px;}\n.card .desc{font-size:12px;color:var(--dim);margin-bottom:20px;line-height:1.5;}\n.card .meta{font-size:11px;margin-top:auto;color:var(--text);border-top:1px dashed var(--border);padding-top:12px;display:flex;justify-content:space-between;}\n.badge-done{color:var(--good);font-weight:700;}\n.badge-none{color:var(--dim);}\n.modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;padding:20px;z-index:100;}\n.modal{background:var(--bg);border:var(--line);width:100%;max-width:540px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,0.05);}\n.modal h2{font-size:22px;margin-bottom:12px;}\ntextarea{width:100%;height:180px;background:var(--bg2);border:var(--line);font-family:inherit;font-size:11px;padding:12px;resize:none;outline:none;color:var(--text);margin-bottom:16px;}\n.modal-btns{display:flex;gap:12px;justify-content:end;}\n.footer-tools{margin-top:40px;padding-top:16px;border-top:var(--line);display:flex;gap:12px;width:100%;}\n</style>
 </head>
 <body>
-<div class="container">
 
-<!-- BROWSER BLOCK -->
-<div id="screen-block">
-  <h1>Wrong Browser</h1>
-  <p id="block-msg"></p>
-</div>
-
-<!-- NAME SCREEN -->
-<div id="screen-name">
-  <div>
-    <div class="school-label">Surigao Education Center</div>
-    <div class="big-title">PHYS 111<br>Physics for Engineers</div>
-  </div>
-  <div class="sub">Enter your full name to begin. Your name will be used to track your progress across all activities.</div>
-  <div>
-    <div class="field-label">Full Name</div>
-    <input type="text" id="name-input" placeholder="e.g. Juan Dela Cruz" autocomplete="off" autocorrect="off" spellcheck="false">
-  </div>
-  <button class="btn" id="name-btn">Continue →</button>
-</div>
-
-<!-- HUB -->
-<div id="screen-hub">
+<div id="hub-view" class="container active">
   <div class="hub-header">
-    <div>
-      <div class="school-label">PHYS 111 – Physics for Engineers</div>
-      <div class="hub-name" id="hub-name"></div>
+    <h1>PHYS 111 Hub</h1>
+    <p style="color:var(--dim); font-size:13px;">Physics for Engineers · Evaluation Workspaces</p>
+    
+    <div class="student-bar">
+      <span>Student Name:</span>
+      <input type="text" id="student-name-input" placeholder="Enter Full Name" onchange="saveName()">
     </div>
-    <div class="hub-actions">
-      <button class="btn ghost sm" onclick="showSummary()">Summary</button>
-      <button class="btn ghost sm" onclick="changeName()">← Name</button>
-    </div>
   </div>
 
-  <!-- Long Quiz -->
-  <div>
-    <div class="section-title">Long Quiz — 16 Topics</div>
-    <div class="card-grid" id="topic-grid"></div>
-  </div>
-
-  <!-- Examinations -->
-  <div>
-    <div class="section-title">Examinations</div>
-    <div class="exam-list" id="exam-list"></div>
-  </div>
-
-  <!-- Circuit -->
-  <div>
-    <div class="section-title">Circuit Puzzle Challenge</div>
-    <div class="circuit-banner" onclick="startCircuit()">
-      <div>
-        <div class="cb-title">⚡ Circuit Puzzle Challenge</div>
-        <div class="cb-meta">10 puzzles · Build &amp; Solve · Series and Parallel Circuits</div>
+  <div class="grid">
+    <div class="card">
+      <h3>Quiz Module 1</h3>
+      <p class="desc">Electrostatics, Coulomb's Law, and Electric Potential Fields.</p>
+      <div class="meta">
+        <span>Status: <span id="status-q1" class="badge-none">Not Taken</span></span>
+        <button onclick="launchActivity('quiz', 'electrostatics')">Launch</button>
       </div>
-      <div style="font-size:11px;color:var(--dim);" id="circuit-status">—</div>
+    </div>
+
+    <div class="card">
+      <h3>Quiz Module 2</h3>
+      <p class="desc">DC Circuits, Resistance, Ohm's Law, and Network Telemetry Analysis.</p>
+      <div class="meta">
+        <span>Status: <span id="status-q2" class="badge-none">Not Taken</span></span>
+        <button onclick="launchActivity('quiz', 'circuits')">Launch</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-tools">
+    <button class="btn-secondary" onclick="openSummary()">Summary Report</button>
+    <button class="btn-secondary" style="color:var(--bad); border-color:rgba(176,32,32,0.3);" onclick="clearLocalCache()">Reset Data</button>
+  </div>
+</div>
+
+<div id="summary-modal" class="modal-bg" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2>Encrypted Progress Report</h2>
+    <p style="font-size:12px; color:var(--dim); margin-bottom:12px;">
+      Copy the single text block sequence code below and paste it inside the Python Decoder program.
+    </p>
+    <textarea id="summary-text" readonly></textarea>
+    <div class="modal-btns">
+      <button onclick="copySummaryText()">Copy to Clipboard</button>
+      <button class="btn-secondary" onclick="hideModal('summary-modal')">Close</button>
     </div>
   </div>
 </div>
-
-<!-- EXAM SCREEN -->
-<div id="screen-exam">
-  <div class="exam-header">
-    <div class="eh-left">
-      <div class="eh-label" id="ex-label"></div>
-      <div class="eh-title" id="ex-title"></div>
-    </div>
-    <div class="eh-right">
-      <div class="timer-big" id="ex-timer">—</div>
-    </div>
-  </div>
-  <div class="timer-bar"><div class="fill" id="ex-timerbar"></div></div>
-  <div class="flag-bar" id="ex-flags">
-    <div class="flag-item">Tab switches: <span id="fl-tabs">0</span></div>
-    <div class="flag-item">Fast answers: <span id="fl-fast">0</span></div>
-  </div>
-  <div class="q-progress" id="ex-progress"></div>
-  <div class="q-text" id="ex-qtext"></div>
-  <div class="choices" id="ex-choices"></div>
-  <div class="btn-row">
-    <button class="btn" id="ex-next">Next →</button>
-  </div>
-</div>
-
-<!-- RESULT SCREEN -->
-<div id="screen-result">
-  <div class="school-label" id="res-label"></div>
-  <div class="result-title" id="res-title"></div>
-  <div class="result-score"><span id="res-score">—</span><span class="rs-total" id="res-total"></span></div>
-  <div class="result-meta" id="res-meta"></div>
-  <div class="result-flags" id="res-flags"></div>
-  <div class="btn-row">
-    <button class="btn" onclick="goHub()">← Back to Hub</button>
-  </div>
-</div>
-
-<!-- CIRCUIT SCREEN -->
-<div id="screen-circuit">
-  <!-- injected by startCircuit() -->
-</div>
-
-<!-- SUMMARY SCREEN -->
-<div id="screen-summary">
-  <div class="hub-header">
-    <div>
-      <div class="school-label">Progress Summary</div>
-      <div class="hub-name" id="sum-name"></div>
-    </div>
-    <button class="btn ghost sm" onclick="goHub()">← Hub</button>
-  </div>
-  <div class="copy-note">Copy this encoded dump and paste into your decoder tool.</div>
-  <div class="summary-dump" id="sum-dump"></div>
-  <button class="btn" onclick="copySummary()">Copy to Clipboard</button>
-</div>
-
-</div><!-- /container -->
 
 <script>
-'use strict';
-
-// ═══════════════════════════════════════════
-//  ENCRYPTION — XOR + Base64
-// ═══════════════════════════════════════════
 const XOR_KEY = 'P4E@SEC2025';
 
 function xorEncrypt(str) {
   let out = '';
-  for (let i = 0; i < str.length; i++)
+  for (let i = 0; i < str.length; i++) {
     out += String.fromCharCode(str.charCodeAt(i) ^ XOR_KEY.charCodeAt(i % XOR_KEY.length));
+  }
   return btoa(unescape(encodeURIComponent(out)));
 }
 
-function xorDecrypt(b64) {
+function xorDecrypt(encoded) {
   try {
-    const str = decodeURIComponent(escape(atob(b64)));
+    let raw = atob(encoded);
     let out = '';
-    for (let i = 0; i < str.length; i++)
-      out += String.fromCharCode(str.charCodeAt(i) ^ XOR_KEY.charCodeAt(i % XOR_KEY.length));
-    return out;
+    for (let i = 0; i < raw.length; i++) {
+      out += String.fromCharCode(raw.charCodeAt(i) ^ XOR_KEY.charCodeAt(i % XOR_KEY.length));
+    }
+    return decodeURIComponent(escape(out));
   } catch(e) { return null; }
 }
 
-function lsSet(k, v) { try { localStorage.setItem(k, xorEncrypt(JSON.stringify(v))); } catch(e){} }
-function lsGet(k) { try { const r = localStorage.getItem(k); return r ? JSON.parse(xorDecrypt(r)) : null; } catch(e){ return null; } }
-function lsRaw(k) { try { return localStorage.getItem(k); } catch(e){ return null; } }
-
-// ═══════════════════════════════════════════
-//  BROWSER CHECK
-// ═══════════════════════════════════════════
-function checkBrowser() {
-  const ua = navigator.userAgent;
-  const isApple = /iPad|iPhone|iPod/.test(ua) ||
-    (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-  if (isApple) return true; // any browser on iOS/iPadOS
-  return /Chrome/.test(ua) && !/Edg|OPR|SamsungBrowser|CriOS/.test(ua);
+function saveName() {
+  const name = document.getElementById('student-name-input').value.strip || document.getElementById('student-name-input').value;
+  localStorage.setItem('p4e_name', name);
+  refreshStatuses();
 }
 
-// ═══════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════
-let studentName = '';
-let activeExam = null; // current exam session
-let timerInterval = null;
+function refreshStatuses() {
+  const name = localStorage.getItem('p4e_name') || '';
+  document.getElementById('student-name-input').value = name;
 
-// ═══════════════════════════════════════════
-//  SCREENS
-// ═══════════════════════════════════════════
-const screens = ['name','hub','exam','result','circuit','summary','block'];
-function show(id) {
-  screens.forEach(s => {
-    const el = document.getElementById('screen-' + s);
-    if (el) el.style.display = (s === id) ? 'flex' : 'none';
-  });
-}
-
-// ═══════════════════════════════════════════
-//  BOOT
-// ═══════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', () => {
-  if (!checkBrowser()) {
-    const ua = navigator.userAgent;
-    const isApple = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-    document.getElementById('block-msg').textContent = isApple
-      ? 'Please use Safari or any browser on your Apple device.'
-      : 'This app must be opened in Google Chrome. Please switch browsers and try again.';
-    show('block'); return;
-  }
-  const saved = lsGet('p4e_name');
-  if (saved) { studentName = saved; goHub(); }
-  else { show('name'); }
-
-  document.getElementById('name-btn').addEventListener('click', submitName);
-  document.getElementById('name-input').addEventListener('keydown', e => { if(e.key==='Enter') submitName(); });
-  document.getElementById('ex-next').addEventListener('click', nextQuestion);
-});
-
-function submitName() {
-  const v = document.getElementById('name-input').value.trim();
-  if (!v) return;
-  studentName = v;
-  lsSet('p4e_name', v);
-  goHub();
-}
-
-function changeName() { show('name'); document.getElementById('name-input').value = studentName; }
-
-// ═══════════════════════════════════════════
-//  HUB
-// ═══════════════════════════════════════════
-const TOPICS = [
-  {id:'force',title:'Force'},
-  {id:'linear_motion',title:'Linear Motion'},
-  {id:'projectile_motion',title:'Projectile Motion'},
-  {id:'vector_addition',title:'Vector Addition'},
-  {id:'work',title:'Work'},
-  {id:'power',title:'Power'},
-  {id:'mechanical_energy',title:'Mechanical Energy'},
-  {id:'momentum_impulse',title:'Momentum & Impulse'},
-  {id:'centripetal',title:'Centripetal Force'},
-  {id:'torque',title:'Torque'},
-  {id:'flow_rate',title:'Flow Rate'},
-  {id:'continuity',title:'Continuity Equation'},
-  {id:'bernoulli',title:'Bernoulli\'s Principle'},
-  {id:'hydrostatic',title:'Hydrostatic Pressure'},
-  {id:'pascal',title:'Pascal\'s Principle'},
-  {id:'scientific_notation',title:'Scientific Notation'},
-];
-
-const EXAMS = [
-  {id:'prelim', title:'Preliminary Examination', items:60, time:5400},
-  {id:'midterm', title:'Midterm Examination', items:60, time:5400},
-  {id:'prefinal', title:'Prefinal Examination', items:60, time:5400},
-  {id:'final', title:'Final Examination', items:54, time:4860},
-];
-
-function goHub() {
-  show('hub');
-  document.getElementById('hub-name').textContent = studentName;
-  renderTopicGrid();
-  renderExamList();
-  renderCircuitStatus();
-}
-
-function getSlot(prefix) {
-  // Returns first available slot s1/s2/s3, or null if all taken
-  for (const s of ['s1','s2','s3']) {
-    const d = lsGet(`${prefix}_${s}`);
-    if (!d) return s;
-  }
-  return null; // all taken
-}
-
-function getBestScore(prefix, total) {
-  let best = null;
-  for (const s of ['s1','s2','s3']) {
-    const d = lsGet(`${prefix}_${s}`);
-    if (d) { if (best === null || d.score > best) best = d.score; }
-  }
-  return best;
-}
-
-function renderTopicGrid() {
-  const grid = document.getElementById('topic-grid');
-  grid.innerHTML = '';
-  TOPICS.forEach(t => {
-    const prefix = `p4e_quiz_${studentName}_${t.id}`;
-    const best = getBestScore(prefix, 4);
-    const slot = getSlot(prefix);
-    const div = document.createElement('div');
-    div.className = 'topic-card';
-    div.innerHTML = `<div class="tc-title">${t.title}</div>
-      <div class="tc-meta">${slot ? '4 items · 1:45/item' : 'All 3 sets done'}</div>
-      ${best !== null ? `<div class="tc-badge">${best}/4</div>` : ''}`;
-    if (slot) div.addEventListener('click', () => { window.location.href = `quiz.html?topic=${t.id}`; });
-    else div.style.opacity = '.5';
-    grid.appendChild(div);
-  });
-}
-
-function renderExamList() {
-  const list = document.getElementById('exam-list');
-  list.innerHTML = '';
-  EXAMS.forEach(ex => {
-    const prefix = `p4e_exam_${studentName}_${ex.id}`;
-    const best = getBestScore(prefix, ex.items);
-    const slot = getSlot(prefix);
-    const div = document.createElement('div');
-    div.className = 'exam-row';
-    let statusHtml = slot ? `Set ${slot.toUpperCase()} available` : 'All 3 sets done';
-    if (best !== null) statusHtml = `Best: ${best}/${ex.items}<br>${slot ? slot.toUpperCase()+' available' : 'All sets done'}`;
-    div.innerHTML = `<div class="er-left">
-        <div class="er-title">${ex.title}</div>
-        <div class="er-meta">${ex.items} items · ${Math.floor(ex.time/60)} min</div>
-      </div>
-      <div class="er-status">${statusHtml}</div>`;
-    if (slot) div.addEventListener('click', () => startExam(ex.id));
-    else div.style.opacity = '.5';
-    list.appendChild(div);
-  });
-}
-
-function renderCircuitStatus() {
-  const d = lsGet(`p4e_circuit_${studentName}_s1`);
-  document.getElementById('circuit-status').textContent = d ? `Best: ${d.score}/10000 pts` : 'Not started';
-}
-
-// ═══════════════════════════════════════════
-//  EXAM ENGINE
-// ═══════════════════════════════════════════
-function startExam(examId) {
-  const ex = EXAMS.find(e => e.id === examId);
-  const prefix = `p4e_exam_${studentName}_${examId}`;
-  const slot = getSlot(prefix);
-  if (!slot) return;
-
-  const questions = EXAM_DATA[examId];
-  const now = new Date();
-
-  activeExam = {
-    examId, slot, prefix, ex,
-    questions,
-    current: 0,
-    score: 0,
-    answers: [],
-    selected: null,
-    startTime: now,
-    startISO: now.toISOString(),
-    qStartTime: Date.now(),
-    tabSwitches: 0,
-    fastAnswers: 0,
-    timeTotal: ex.time,
-    timeLeft: ex.time,
-  };
-
-  document.addEventListener('visibilitychange', onVisChange);
-  document.getElementById('ex-label').textContent = `PHYS 111 · ${slot.toUpperCase()}`;
-  document.getElementById('ex-title').textContent = ex.title;
-  updateFlagBar();
-  renderQuestion();
-  startExamTimer();
-  show('exam');
-}
-
-function onVisChange() {
-  if (!activeExam) return;
-  if (document.hidden) {
-    activeExam.tabSwitches++;
-    updateFlagBar();
-  }
-}
-
-function updateFlagBar() {
-  document.getElementById('fl-tabs').textContent = activeExam.tabSwitches;
-  document.getElementById('fl-fast').textContent = activeExam.fastAnswers;
-}
-
-function startExamTimer() {
-  clearInterval(timerInterval);
-  updateTimerUI();
-  timerInterval = setInterval(() => {
-    activeExam.timeLeft--;
-    updateTimerUI();
-    if (activeExam.timeLeft <= 0) { clearInterval(timerInterval); autoSubmitAll(); }
-  }, 1000);
-}
-
-function updateTimerUI() {
-  const t = activeExam.timeLeft;
-  const m = Math.floor(t/60), s = t%60;
-  const str = `${m}:${s<10?'0'+s:s}`;
-  const el = document.getElementById('ex-timer');
-  const fill = document.getElementById('ex-timerbar');
-  el.textContent = str;
-  const pct = (t / activeExam.timeTotal * 100).toFixed(1);
-  fill.style.width = pct + '%';
-  el.className = 'timer-big' + (t <= 300 ? ' bad' : t <= 600 ? ' warn' : '');
-  fill.className = 'fill' + (t <= 300 ? ' bad' : t <= 600 ? ' warn' : '');
-}
-
-function renderQuestion() {
-  const q = activeExam.questions[activeExam.current];
-  const total = activeExam.questions.length;
-  document.getElementById('ex-progress').textContent =
-    `Question ${activeExam.current+1} of ${total}`;
-
-  let qhtml = '';
-  if (q.situation) qhtml += `<span class="sit">${esc(q.situation)}</span>`;
-  qhtml += esc(q.q);
-  document.getElementById('ex-qtext').innerHTML = qhtml;
-
-  const choicesEl = document.getElementById('ex-choices');
-  choicesEl.innerHTML = '';
-  const letters = ['A','B','C','D'];
-  q.choices.forEach((ch, i) => {
-    const div = document.createElement('div');
-    div.className = 'choice' + (activeExam.selected === i ? ' selected' : '');
-    div.innerHTML = `<span class="ch-letter">${letters[i]}.</span><span>${esc(ch)}</span>`;
-    div.addEventListener('click', () => selectChoice(i));
-    choicesEl.appendChild(div);
-  });
-
-  document.getElementById('ex-next').textContent =
-    activeExam.current === total-1 ? 'Submit Exam' : 'Next →';
-  activeExam.qStartTime = Date.now();
-}
-
-function selectChoice(i) {
-  activeExam.selected = i;
-  document.querySelectorAll('.choice').forEach((el,idx) => {
-    el.classList.toggle('selected', idx === i);
-  });
-}
-
-function nextQuestion() {
-  if (activeExam.selected === null) return; // must select
-  const elapsed = (Date.now() - activeExam.qStartTime) / 1000;
-  if (elapsed < 5) activeExam.fastAnswers++;
-  updateFlagBar();
-
-  const q = activeExam.questions[activeExam.current];
-  const correct = activeExam.selected === q.answer;
-  if (correct) activeExam.score++;
-  activeExam.answers.push({ q: activeExam.current, sel: activeExam.selected, correct, elapsed: Math.round(elapsed) });
-  activeExam.selected = null;
-  activeExam.current++;
-
-  if (activeExam.current >= activeExam.questions.length) {
-    finishExam('complete');
-  } else {
-    renderQuestion();
-  }
-}
-
-function autoSubmitAll() {
-  // Time up — record unanswered as null
-  while (activeExam.current < activeExam.questions.length) {
-    activeExam.answers.push({ q: activeExam.current, sel: null, correct: false, elapsed: 0 });
-    activeExam.current++;
-  }
-  finishExam('timeout');
-}
-
-function finishExam(mode) {
-  clearInterval(timerInterval);
-  document.removeEventListener('visibilitychange', onVisChange);
-  const dur = Math.round((Date.now() - activeExam.startTime.getTime()) / 1000);
-  const record = {
-    score: activeExam.score,
-    total: activeExam.questions.length,
-    set: activeExam.slot,
-    dateTime: activeExam.startISO,
-    duration: dur,
-    tabSwitches: activeExam.tabSwitches,
-    fastAnswers: activeExam.fastAnswers,
-    mode,
-    answers: activeExam.answers,
-  };
-  lsSet(`${activeExam.prefix}_${activeExam.slot}`, record);
-
-  // Show result
-  document.getElementById('res-label').textContent = `${activeExam.ex.title} · ${activeExam.slot.toUpperCase()}`;
-  document.getElementById('res-title').textContent = mode === 'timeout' ? 'Time\'s Up' : 'Exam Complete';
-  document.getElementById('res-score').textContent = activeExam.score;
-  document.getElementById('res-total').textContent = ` / ${activeExam.questions.length}`;
-  const pct = Math.round(activeExam.score / activeExam.questions.length * 100);
-  document.getElementById('res-meta').innerHTML =
-    `${pct}% &nbsp;·&nbsp; ${fmtDur(dur)} &nbsp;·&nbsp; Taken: ${fmtDate(activeExam.startISO)}`;
-  const flags = [];
-  if (activeExam.tabSwitches > 0) flags.push(`⚑ Tab switches: ${activeExam.tabSwitches}`);
-  if (activeExam.fastAnswers > 0) flags.push(`⚑ Fast answers: ${activeExam.fastAnswers}`);
-  document.getElementById('res-flags').textContent = flags.join('  ');
-  show('result');
-  activeExam = null;
-}
-
-// ═══════════════════════════════════════════
-//  CIRCUIT
-// ═══════════════════════════════════════════
-function startCircuit() {
-  const sc = document.getElementById('screen-circuit');
-  if (!sc.dataset.loaded) {
-    sc.innerHTML = buildCircuitHTML();
-    sc.dataset.loaded = '1';
-    // inject scripts after DOM insert
-    injectCircuitScripts(sc);
-  }
-  show('circuit');
-}
-
-function buildCircuitHTML() {
-  return `
-<div style="display:flex;flex-direction:column;gap:12px;padding:16px 0 40px;">
-  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e0e0da;padding-bottom:12px;">
-    <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;">⚡ Circuit Puzzle Challenge</div>
-    <button class="btn ghost sm" onclick="goHub()">← Hub</button>
-  </div>
-
-  <!-- TITLE SCREEN -->
-  <div id="screen-title" class="cscreen active">
-    <div style="text-align:center;padding:20px 0 10px;font-size:48px;">⚡</div>
-    <div style="font-family:'Fraunces',serif;font-size:clamp(22px,5vw,36px);font-weight:700;text-align:center;margin-bottom:8px;">Circuit Puzzle Challenge</div>
-    <p style="color:#777;font-size:14px;text-align:center;margin-bottom:16px;">Build and solve series &amp; parallel circuits.</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;font-size:12px;color:#555;">
-      <span style="border:1px solid #e0e0da;padding:4px 10px;">🧩 10 Puzzles</span>
-      <span style="border:1px solid #e0e0da;padding:4px 10px;">⏱ 3 min each</span>
-      <span style="border:1px solid #e0e0da;padding:4px 10px;">⚡ 1,000 pts max</span>
-    </div>
-    <button id="btn-start" class="btn">Start Challenge</button>
-  </div>
-
-  <!-- PUZZLE SCREEN -->
-  <div id="screen-puzzle" class="cscreen" style="display:none;">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
-      <div>
-        <div style="font-size:11px;color:#777;letter-spacing:.1em;" id="puzzle-number">1 / 10</div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <h2 style="font-family:'Fraunces',serif;font-size:clamp(16px,3vw,22px);" id="puzzle-title"></h2>
-          <span style="font-size:11px;border:1px solid #cce;color:#44a;padding:2px 8px;" id="puzzle-category"></span>
-        </div>
-      </div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:clamp(24px,4vw,36px);font-weight:700;" id="ctimer">3:00</div>
-    </div>
-    <p style="font-size:13px;color:#777;margin-bottom:8px;" id="puzzle-desc"></p>
-    <div style="border:1px solid #e0e0da;border-radius:4px;background:#f9f9f7;padding:8px;margin-bottom:8px;">
-      <svg id="circuit-svg" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;"></svg>
-    </div>
-    <div style="font-size:11px;color:#888;text-align:center;margin-bottom:8px;" id="instruction-text"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
-      <button id="btn-hint" class="btn ghost sm">💡 Hint</button>
-      <button id="btn-check" class="btn sm">✔ Check</button>
-      <button id="btn-next" class="btn sm" style="display:none;">Next →</button>
-    </div>
-    <div id="hint-box" style="display:none;background:#fffbe6;border:1px solid #ffe58f;padding:10px 14px;font-size:13px;">💡 <span id="hint-text"></span></div>
-    <div id="cfeedback" style="font-size:13px;padding:10px 14px;display:none;"></div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#888;margin-top:4px;">
-      <span><span style="display:inline-block;width:10px;height:10px;background:#ff8a65;border-radius:2px;"></span> Resistor</span>
-      <span><span style="display:inline-block;width:10px;height:10px;background:#ffeb3b;border-radius:2px;"></span> Switch</span>
-      <span><span style="display:inline-block;width:10px;height:10px;background:#66bb6a;border-radius:2px;"></span> Battery</span>
-      <span><span style="display:inline-block;width:10px;height:10px;background:#fff176;border-radius:2px;border:1px solid #ccc;"></span> Bulb</span>
-    </div>
-  </div>
-
-  <!-- RESULTS SCREEN -->
-  <div id="screen-results" class="cscreen" style="display:none;">
-    <div style="font-family:'Fraunces',serif;font-size:clamp(20px,4vw,28px);font-weight:700;margin-bottom:8px;">Challenge Complete!</div>
-    <div style="font-size:16px;margin-bottom:16px;" id="result-grade"></div>
-    <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:20px;">
-      <div><div style="font-size:clamp(28px,6vw,40px);font-weight:700;font-family:'Fraunces',serif;" id="result-score"></div><div style="font-size:11px;color:#777;">Total Score</div></div>
-      <div><div style="font-size:clamp(28px,6vw,40px);font-weight:700;font-family:'Fraunces',serif;" id="result-solved"></div><div style="font-size:11px;color:#777;">Solved</div></div>
-      <div><div style="font-size:clamp(28px,6vw,40px);font-weight:700;font-family:'Fraunces',serif;" id="result-pct"></div><div style="font-size:11px;color:#777;">Efficiency</div></div>
-    </div>
-    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;">
-      <thead><tr style="border-bottom:1px solid #e0e0da;">
-        <th style="padding:6px;text-align:left;font-size:11px;color:#777;">#</th>
-        <th style="padding:6px;text-align:left;font-size:11px;color:#777;">Puzzle</th>
-        <th style="padding:6px;text-align:center;font-size:11px;color:#777;">✓</th>
-        <th style="padding:6px;text-align:right;font-size:11px;color:#777;">Score</th>
-      </tr></thead>
-      <tbody id="result-breakdown"></tbody>
-    </table>
-    <button id="btn-restart" class="btn">Play Again</button>
-  </div>
-</div>`;
-}
-
-function injectCircuitScripts(parent) {
-  // Load components.js, puzzles.js, then init circuit game
-  const s1 = document.createElement('script'); s1.src = 'components.js';
-  s1.onload = () => {
-    const s2 = document.createElement('script'); s2.src = 'puzzles.js';
-    s2.onload = () => { initCircuitGame(); };
-    document.head.appendChild(s2);
-  };
-  document.head.appendChild(s1);
-}
-
-function initCircuitGame() {
-  // Mini circuit game engine scoped to circuit screen
-  const SVG_NS = 'http://www.w3.org/2000/svg';
-  let cPuzzleIndex = 0, cTotalPuzzles = 0, cSolved = false, cHintShown = false;
-  let cTimerInterval = null, cTimeRemaining = 0;
-  let cScores = [], cSlotStates = {}, cResistorStates = {}, cBatteryVoltageIndex = 0;
-
-  function cel(id){ return document.getElementById(id); }
-
-  function cShow(name){
-    ['title','puzzle','results'].forEach(s=>{
-      const el = cel('screen-'+s);
-      if(el) el.style.display = s===name?'block':'none';
-    });
-  }
-
-  cTotalPuzzles = Puzzles.getAll().length;
-  cel('btn-start').addEventListener('click',()=>{ cPuzzleIndex=0; cScores=[]; cStartPuzzle(0); });
-  cel('btn-next').addEventListener('click',()=>{ cPuzzleIndex++; cPuzzleIndex<cTotalPuzzles?cStartPuzzle(cPuzzleIndex):cShowResults(); });
-  cel('btn-restart').addEventListener('click',()=>{ cPuzzleIndex=0; cScores=[]; cShow('title'); });
-  cel('btn-hint').addEventListener('click',cToggleHint);
-  cel('btn-check').addEventListener('click',cCheckAnswer);
-
-  function cStartPuzzle(index){
-    const puzzle = Puzzles.getAll()[index];
-    cSolved=false; cHintShown=false; cSlotStates={}; cResistorStates={}; cBatteryVoltageIndex=0;
-    if(puzzle.type==='build') puzzle.slots.forEach(s=>{cSlotStates[s.id]='empty';});
-    else cGetAllResistorSlots(puzzle).forEach(rs=>{cResistorStates[rs.id]=false;});
-    cel('puzzle-number').textContent=`${index+1} / ${cTotalPuzzles}`;
-    cel('puzzle-title').textContent=puzzle.title;
-    cel('puzzle-category').textContent=puzzle.category;
-    cel('puzzle-desc').textContent=puzzle.description;
-    cel('hint-text').textContent=puzzle.hint;
-    cel('hint-box').style.display='none';
-    cel('btn-hint').textContent='💡 Hint';
-    cel('cfeedback').style.display='none';
-    cel('btn-check').disabled=false;
-    cel('btn-next').style.display='none';
-    cel('instruction-text').innerHTML=puzzle.type==='build'
-      ?'Click a <b>dashed slot</b> to cycle components'
-      :'Click <b>resistor slots</b> to toggle · Click <b>battery</b> to change voltage';
-    cDrawCircuit(puzzle);
-    cStartTimer(puzzle.timeLimit);
-    cShow('puzzle');
-  }
-
-  function cGetAllResistorSlots(p){ const s=[]; if(p.resistorSlots)s.push(...p.resistorSlots); if(p.seriesResistorSlots)s.push(...p.seriesResistorSlots); if(p.branches)p.branches.forEach(b=>{if(b.resistorSlots)s.push(...b.resistorSlots);}); return s; }
-  function cGetAllBulbs(p){ const b=[]; if(p.bulbs)b.push(...p.bulbs); if(p.branches)p.branches.forEach(br=>{if(br.bulb)b.push(br.bulb);}); return b; }
-
-  function cDrawCircuit(puzzle){
-    const svg=cel('circuit-svg');
-    while(svg.firstChild)svg.removeChild(svg.firstChild);
-    puzzle.wires.forEach(w=>{ const l=Components.createLine(w.x1,w.y1,w.x2,w.y2,'#aaa',2); svg.appendChild(l); });
-    if(puzzle.junctions) puzzle.junctions.forEach(j=>{ const d=document.createElementNS(SVG_NS,'circle'); d.setAttribute('cx',j.x);d.setAttribute('cy',j.y);d.setAttribute('r',5);d.setAttribute('fill','#aaa'); svg.appendChild(d); });
-    puzzle.type==='build'?cDrawBuild(svg,puzzle):cDrawSolve(svg,puzzle);
-  }
-
-  function cDrawBuild(svg,puzzle){
-    puzzle.fixed.forEach(f=>Components.draw(svg,f.type,f.cx,f.cy,f.orientation));
-    puzzle.slots.forEach(s=>cRenderSlot(svg,s));
-  }
-
-  function cRenderSlot(svg,slotDef){
-    const current=cSlotStates[slotDef.id];
-    const old=svg.querySelector(`[data-slot="${slotDef.id}"]`); if(old)old.remove();
-    const g=document.createElementNS(SVG_NS,'g'); g.setAttribute('data-slot',slotDef.id);
-    g.style.cursor=cSolved?'default':'pointer';
-    if(current==='empty') Components.drawSlot(g,slotDef.cx,slotDef.cy,slotDef.orientation);
-    else Components.draw(g,current,slotDef.cx,slotDef.cy,slotDef.orientation);
-    if(current!=='empty'){ const ly=slotDef.orientation==='h'?slotDef.cy+30:slotDef.cy; const lx=slotDef.orientation==='h'?slotDef.cx:slotDef.cx+46; g.appendChild(Components.createText(lx,ly,current.toUpperCase(),9,'#999')); }
-    if(!cSolved){ g.addEventListener('click',()=>{ const types=Components.TYPES; cSlotStates[slotDef.id]=types[(types.indexOf(cSlotStates[slotDef.id])+1)%types.length]; cRenderSlot(svg,slotDef); cel('cfeedback').style.display='none'; }); g.addEventListener('mouseenter',()=>{g.style.filter='brightness(1.2)';}); g.addEventListener('mouseleave',()=>{g.style.filter='';}); }
-    svg.appendChild(g);
-  }
-
-  function cDrawSolve(svg,puzzle){
-    cRenderBattery(svg,puzzle);
-    cGetAllResistorSlots(puzzle).forEach(rs=>cRenderRSlot(svg,rs));
-    cGetAllBulbs(puzzle).forEach(b=>{ Components.drawBulb(svg,b.cx,b.cy,b.orientation,{ratings:{resistance:b.resistance,minVoltage:b.minVoltage,maxVoltage:b.maxVoltage,minCurrent:b.minCurrent,maxCurrent:b.maxCurrent}}); });
-  }
-
-  function cRenderBattery(svg,puzzle){
-    const batt=puzzle.battery; const old=svg.querySelector('[data-battery]'); if(old)old.remove();
-    const voltage=batt.voltages[cBatteryVoltageIndex];
-    const g=document.createElementNS(SVG_NS,'g'); g.setAttribute('data-battery','true');
-    Components.drawBattery(g,batt.cx,batt.cy,batt.orientation,{voltage,clickable:!cSolved});
-    if(!cSolved){ g.style.cursor='pointer'; g.addEventListener('click',()=>{ cBatteryVoltageIndex=(cBatteryVoltageIndex+1)%batt.voltages.length; cRenderBattery(svg,puzzle); cel('cfeedback').style.display='none'; }); g.addEventListener('mouseenter',()=>{g.style.filter='brightness(1.2)';}); g.addEventListener('mouseleave',()=>{g.style.filter='';}); }
-    svg.appendChild(g);
-  }
-
-  function cRenderRSlot(svg,rsDef){
-    const placed=cResistorStates[rsDef.id]; const old=svg.querySelector(`[data-rslot="${rsDef.id}"]`); if(old)old.remove();
-    const g=document.createElementNS(SVG_NS,'g'); g.setAttribute('data-rslot',rsDef.id);
-    g.style.cursor=cSolved?'default':'pointer';
-    Components.drawResistorToggle(g,rsDef.cx,rsDef.cy,rsDef.orientation,rsDef.ohms,placed);
-    if(!cSolved){ g.addEventListener('click',()=>{ cResistorStates[rsDef.id]=!cResistorStates[rsDef.id]; cRenderRSlot(svg,rsDef); cel('cfeedback').style.display='none'; }); g.addEventListener('mouseenter',()=>{g.style.filter='brightness(1.2)';}); g.addEventListener('mouseleave',()=>{g.style.filter='';}); }
-    svg.appendChild(g);
-  }
-
-  function cCheckAnswer(){
-    const puzzle=Puzzles.getAll()[cPuzzleIndex];
-    if(puzzle.type==='build'){
-      const allCorrect=puzzle.slots.every(s=>cSlotStates[s.id]===s.correctAnswer);
-      if(allCorrect){ cPuzzleSolved(); }
-      else{ const fb=cel('cfeedback'); fb.style.display='block'; fb.style.background='#fff0f0'; fb.style.border='1px solid #f5c6cb'; fb.style.color='#721c24'; fb.textContent='❌ Not quite. Check your component placements.'; }
-    } else {
-      const voltage=puzzle.battery.voltages[cBatteryVoltageIndex];
-      const result=cValidateCircuit(puzzle,voltage,cResistorStates);
-      if(result.allInRange){ cPuzzleSolved(); }
-      else{
-        const fb=cel('cfeedback'); fb.style.display='block'; fb.style.background='#fff0f0'; fb.style.border='1px solid #f5c6cb'; fb.style.color='#721c24';
-        fb.innerHTML='❌ Out of range.<br>'+result.details.map(d=>{
-          const vOk=!d.vLow&&!d.vHigh, iOk=!d.iLow&&!d.iHigh;
-          return `<b>${d.name}</b>: V=${d.vBulb.toFixed(2)}V ${vOk?'✓':'✗'} · I=${d.current.toFixed(3)}A ${iOk?'✓':'✗'}`;
-        }).join('<br>');
-      }
-    }
-  }
-
-  function cValidateCircuit(puzzle,voltage,rStates){
-    const ct=puzzle.circuitType;
-    if(ct==='series') return cValSeries(puzzle,voltage,rStates);
-    if(ct==='parallel') return cValParallel(puzzle,voltage,rStates);
-    if(ct==='series-parallel') return cValSP(puzzle,voltage,rStates);
-    return {allInRange:false,details:[]};
-  }
-  function cCheckBulb(cur,vb,b){ const vL=vb<b.minVoltage,vH=vb>b.maxVoltage,iL=cur<b.minCurrent,iH=cur>b.maxCurrent; return {current:cur,vBulb:vb,inRange:!vL&&!vH&&!iL&&!iH,vLow:vL,vHigh:vH,iLow:iL,iHigh:iH,minV:b.minVoltage,maxV:b.maxVoltage,minI:b.minCurrent,maxI:b.maxCurrent}; }
-  function cValSeries(puzzle,voltage,rStates){ let rTotal=0; puzzle.resistorSlots.forEach(rs=>{if(rStates[rs.id])rTotal+=rs.ohms;}); puzzle.bulbs.forEach(b=>{rTotal+=b.resistance;}); const cur=voltage/rTotal; const details=puzzle.bulbs.map((b,i)=>{ const vb=cur*b.resistance; return {name:puzzle.bulbs.length>1?`Bulb ${i+1}`:'Bulb',...cCheckBulb(cur,vb,b)}; }); return {allInRange:details.every(d=>d.inRange),details}; }
-  function cValParallel(puzzle,voltage,rStates){ const details=puzzle.branches.map((br,i)=>{ let rBr=br.bulb.resistance; br.resistorSlots.forEach(rs=>{if(rStates[rs.id])rBr+=rs.ohms;}); const cur=voltage/rBr; const vb=cur*br.bulb.resistance; return {name:`Bulb ${i+1}`,...cCheckBulb(cur,vb,br.bulb)}; }); return {allInRange:details.every(d=>d.inRange),details}; }
-  function cValSP(puzzle,voltage,rStates){ let rSeries=0; if(puzzle.seriesResistorSlots) puzzle.seriesResistorSlots.forEach(rs=>{if(rStates[rs.id])rSeries+=rs.ohms;}); const branchR=puzzle.branches.map(br=>{ let r=br.bulb.resistance; if(br.resistorSlots)br.resistorSlots.forEach(rs=>{if(rStates[rs.id])r+=rs.ohms;}); return r; }); const rPar=1/branchR.reduce((s,r)=>s+1/r,0); const rTotal=rSeries+rPar; const iTotal=voltage/rTotal; const vPar=iTotal*rPar; const details=puzzle.branches.map((br,i)=>{ const iBr=vPar/branchR[i]; const vb=iBr*br.bulb.resistance; return {name:`Bulb ${i+1}`,...cCheckBulb(iBr,vb,br.bulb)}; }); return {allInRange:details.every(d=>d.inRange),details}; }
-
-  function cPuzzleSolved(){
-    cSolved=true; clearInterval(cTimerInterval);
-    const timeUsed=Puzzles.getAll()[cPuzzleIndex].timeLimit-cTimeRemaining;
-    const score=Math.round((cTimeRemaining/Puzzles.getAll()[cPuzzleIndex].timeLimit)*1000);
-    cScores.push({puzzleId:cPuzzleIndex+1,title:Puzzles.getAll()[cPuzzleIndex].title,solved:true,timeUsed,score});
-    const fb=cel('cfeedback'); fb.style.display='block'; fb.style.background='#f0fff0'; fb.style.border='1px solid #c3e6cb'; fb.style.color='#155724';
-    fb.innerHTML=`✅ Correct! Solved in ${cFmtTime(timeUsed)} — <b>${score} pts</b>`;
-    cel('btn-check').disabled=true; cel('btn-next').style.display='inline-block';
-    cel('btn-next').textContent=cPuzzleIndex<cTotalPuzzles-1?'Next Puzzle →':'View Results →';
-  }
-
-  function cTimeUp(){
-    if(cSolved)return; cSolved=true;
-    cScores.push({puzzleId:cPuzzleIndex+1,title:Puzzles.getAll()[cPuzzleIndex].title,solved:false,timeUsed:Puzzles.getAll()[cPuzzleIndex].timeLimit,score:0});
-    const fb=cel('cfeedback'); fb.style.display='block'; fb.style.background='#fff3cd'; fb.style.border='1px solid #ffeeba'; fb.style.color='#856404';
-    fb.textContent="⏰ Time's up!";
-    cel('btn-check').disabled=true; cel('btn-next').style.display='inline-block';
-    cel('btn-next').textContent=cPuzzleIndex<cTotalPuzzles-1?'Next Puzzle →':'View Results →';
-  }
-
-  function cStartTimer(seconds){ clearInterval(cTimerInterval); cTimeRemaining=seconds; cUpdateTimer();
-    cTimerInterval=setInterval(()=>{ cTimeRemaining--; cUpdateTimer(); if(cTimeRemaining<=0){clearInterval(cTimerInterval);cTimeUp();} },1000); }
-  function cUpdateTimer(){ const m=Math.floor(cTimeRemaining/60),s=cTimeRemaining%60; cel('ctimer').textContent=`${m}:${s<10?'0'+s:s}`; }
-  function cFmtTime(s){ return `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`; }
-  function cToggleHint(){ cHintShown=!cHintShown; cel('hint-box').style.display=cHintShown?'block':'none'; cel('btn-hint').textContent=cHintShown?'💡 Hide Hint':'💡 Hint'; }
-
-  function cShowResults(){
-    const totalScore=cScores.reduce((s,x)=>s+x.score,0);
-    const maxScore=cTotalPuzzles*1000;
-    const solvedCount=cScores.filter(s=>s.solved).length;
-    const pct=Math.round(totalScore/maxScore*100);
-    cel('result-score').textContent=`${totalScore}/${maxScore}`;
-    cel('result-solved').textContent=`${solvedCount}/${cTotalPuzzles}`;
-    cel('result-pct').textContent=pct+'%';
-    let grade=''; if(pct>=90)grade='⚡ Circuit Master!'; else if(pct>=70)grade='🔋 Electrician in Training'; else if(pct>=50)grade='💡 Getting There'; else grade='📚 Keep Practicing';
-    cel('result-grade').textContent=grade;
-    const tbody=cel('result-breakdown'); tbody.innerHTML='';
-    cScores.forEach(s=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td style="padding:6px;">${s.puzzleId}</td><td style="padding:6px;">${s.title}</td><td style="padding:6px;text-align:center;">${s.solved?'✅':'❌'}</td><td style="padding:6px;text-align:right;font-weight:700;">${s.score}</td>`; tbody.appendChild(tr); });
-
-    // Save to localStorage
-    const prefix = `p4e_circuit_${studentName}`;
-    const slot = getSlot(prefix);
-    if (slot) lsSet(`${prefix}_${slot}`, { score: totalScore, total: maxScore, date: new Date().toISOString(), puzzles: cScores });
-    renderCircuitStatus();
-    cShow('results');
-  }
-}
-
-// ═══════════════════════════════════════════
-//  SUMMARY
-// ═══════════════════════════════════════════
-function showSummary() {
-  document.getElementById('sum-name').textContent = studentName;
-  // Collect all relevant localStorage keys for this student
-  const raw = {};
+  // Check LocalStorage keys for current user logs
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && (k.includes(studentName) || k === 'p4e_name')) {
-      raw[k] = localStorage.getItem(k);
+    if (k.includes('electrostatics')) {
+      document.getElementById('status-q1').className = 'badge-done';
+      document.getElementById('status-q1').innerText = 'Completed';
+    }
+    if (k.includes('circuits')) {
+      document.getElementById('status-q2').className = 'badge-done';
+      document.getElementById('status-q2').innerText = 'Completed';
     }
   }
-  const payload = {
-    exportedAt: new Date().toISOString(),
-    student: studentName,
-    data: raw,
-  };
-  // Encrypt the whole payload
-  document.getElementById('sum-dump').textContent = xorEncrypt(JSON.stringify(payload));
-  show('summary');
 }
 
-function copySummary() {
-  const text = document.getElementById('sum-dump').textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.querySelector('#screen-summary .btn:not(.ghost)');
-    const orig = btn.textContent;
-    btn.textContent = 'Copied!';
-    setTimeout(() => { btn.textContent = orig; }, 2000);
-  }).catch(() => {
-    document.getElementById('sum-dump').select && document.getElementById('sum-dump').select();
+function launchActivity(type, topic) {
+  const name = localStorage.getItem('p4e_name');
+  if(!name || name.trim() === "") {
+    alert("Please enter your name context identity before starting a module evaluation slot.");
+    return;
+  }
+  window.location.href = `quiz.html?type=${type}&topic=${topic}`;
+}
+
+function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+function closeModal(e) { e.currentTarget.style.display = 'none'; }
+
+function clearLocalCache() {
+  if (confirm("Are you sure you want to completely clear browser progress attempts stored locally?")) {
+    localStorage.clear();
+    window.location.reload();
+  }
+}
+
+function copySummaryText() {
+  const area = document.getElementById('summary-text');
+  area.select();
+  document.execCommand('copy');
+  alert("Encrypted data scorecard payload saved to clipboard!");
+}
+
+// ────────────────────────────────────────────────────────
+//  SIMPLIFIED PLAIN-TEXT MATRIX COMPILATION ENGINE
+// ────────────────────────────────────────────────────────
+function openSummary() {
+  const keys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    if (localStorage.key(i).startsWith('p4e_')) keys.push(localStorage.key(i));
+  }
+  keys.sort();
+
+  const studentName = localStorage.getItem('p4e_name') || 'Anonymous Student';
+  
+  // 1. Build clear text human-readable row records
+  let reportText = "==================================================\n";
+  reportText += `       PHYS 111 STUDENT PROGRESS SUMMARY REPORT\n`;
+  reportText += "==================================================\n";
+  reportText += `STUDENT IDENTIFIER : ${studentName}\n`;
+  reportText += `GENERATION DATE    : ${new Date().toLocaleString()}\n`;
+  reportText += "--------------------------------------------------\n\n";
+
+  let validItems = 0;
+
+  keys.forEach(k => {
+    if (k === 'p4e_name') return;
+    
+    const plaintextValue = xorDecrypt(localStorage.getItem(k));
+    if (!plaintextValue) return;
+
+    try {
+      const obj = JSON.parse(plaintextValue);
+      validItems++;
+
+      let cleanActivity = k.replace('p4e_', '').replace(/_/g, ' ');
+      cleanActivity = cleanActivity.replace(/\b\w/g, c => c.toUpperCase());
+
+      const score = obj.score !== undefined ? obj.score : 0;
+      const total = obj.total !== undefined ? obj.total : 0;
+      const duration = obj.duration ? `${Math.floor(obj.duration / 60)}m ${obj.duration % 60}s` : '0m 0s';
+      const dtString = obj.dateTime ? obj.dateTime : '—';
+      
+      const flags = [];
+      if (obj.tabSwitches > 0) flags.push(`tab_switches=${obj.tabSwitches}`);
+      if (obj.fastAnswers > 0) flags.push(`fast_answers=${obj.fastAnswers}`);
+      if (obj.mode && obj.mode !== 'complete') flags.push(`mode=${obj.mode}`);
+      const flagLog = flags.length > 0 ? flags.join('; ') : '';
+
+      // Direct clean text properties pattern used by the Python SQLite consumer regex match tracker
+      reportText += `[ENTRY_KEY]: ${k}\n`;
+      reportText += `  Score    : ${score}/${total}\n`;
+      reportText += `  Date     : ${dtString}\n`;
+      reportText += `  Duration : ${duration}\n`;
+      reportText += `  Flags    : ${flagLog}\n`;
+      reportText += "--------------------------------------------------\n";
+    } catch (e) {
+      reportText += `[ENTRY_KEY]: ${k}\n  Error reading format schema metrics.\n--------------------------------------------------\n`;
+    }
   });
+
+  if (validItems === 0) {
+    reportText += "No active performance history record logs exist inside browser database properties.\n--------------------------------------------------\n";
+  }
+
+  // 2. Encrypt the structured explicit text layout block 
+  const encryptedPayloadBlock = xorEncrypt(reportText);
+
+  // 3. Populate modal UI element properties view
+  document.getElementById('summary-text').value = encryptedPayloadBlock;
+  showModal('summary-modal');
 }
 
-// ═══════════════════════════════════════════
-//  HELPERS
-// ═══════════════════════════════════════════
-function esc(s) { return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function fmtDur(sec){ sec=Math.max(0,Math.round(sec)); return `${Math.floor(sec/60)}m ${sec%60<10?'0':''}${sec%60}s`; }
-function fmtDate(iso){ try{ const d=new Date(iso); return d.toLocaleDateString('en-PH',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(e){ return iso; } }
-
-// ═══════════════════════════════════════════
-//  EXAM DATA
-// ═══════════════════════════════════════════
-const EXAM_DATA = {
-
-prelim: [
-  {q:"What is the resultant of two vectors of equal magnitude acting in opposite directions?",choices:["Zero","Double the magnitude","Half the magnitude","Equal to one vector"],answer:0},
-  {q:"What method involves placing vectors head-to-tail to find the resultant?",choices:["Parallelogram method","Polygon method","Component method","Graphical method"],answer:1},
-  {q:"What is the SI unit of acceleration?",choices:["m/s","m/s²","m²/s","s/m"],answer:1},
-  {q:"What does the slope of a displacement-time graph represent?",choices:["Acceleration","Distance","Velocity","Force"],answer:2},
-  {q:"What is the term for the rate of change of velocity?",choices:["Speed","Acceleration","Displacement","Momentum"],answer:1},
-  {q:"What type of motion occurs when an object moves with constant velocity?",choices:["Uniform motion","Accelerated motion","Projectile motion","Circular motion"],answer:0},
-  {q:"What is the shape of the trajectory of a projectile under gravity?",choices:["Straight line","Circle","Parabola","Ellipse"],answer:2},
-  {q:"What is the horizontal component of velocity in projectile motion (neglecting air resistance)?",choices:["Constant","Increasing","Decreasing","Zero"],answer:0},
-  {q:"What is the vertical acceleration of a projectile at the highest point of its trajectory?",choices:["Zero","9.8 m/s²","Maximum","Variable"],answer:1},
-  {q:"What does Newton's First Law of Motion state?",choices:["F = ma","An object at rest stays at rest unless acted upon by a force","For every action there is an equal and opposite reaction","Objects always accelerate under gravity"],answer:1},
-  {q:"What is the formula representing Newton's Second Law of Motion?",choices:["p = mv","F = ma","W = Fd","KE = ½mv²"],answer:1},
-  {q:"What does Newton's Third Law state about action and reaction forces?",choices:["They act on the same object","They are equal in magnitude and opposite in direction","They cancel each other out","They are perpendicular to each other"],answer:1},
-  {q:"If two vectors A and B are perpendicular to each other, how is the magnitude of their resultant calculated?",choices:["|A| + |B|","|A| - |B|","√(A² + B²)","A × B"],answer:2},
-  {q:"Why does the order of vector addition not affect the resultant?",choices:["Because vectors are scalar quantities","Because vector addition is commutative","Because vectors always have the same direction","Because magnitude is more important than direction"],answer:1},
-  {q:"Why does an object with constant velocity have zero acceleration?",choices:["Because velocity is constant","Because there is no change in velocity","Because displacement equals zero","Because speed equals distance"],answer:1},
-  {q:"How does the area under a velocity-time graph relate to motion?",choices:["It represents acceleration","It represents displacement","It represents force","It represents momentum"],answer:1},
-  {q:"Why can an object have a non-zero velocity but zero acceleration?",choices:["When it moves in a circle","When it moves with uniform velocity","When it is at rest","When it changes direction"],answer:1},
-  {q:"What happens to the velocity of an object in free fall (neglecting air resistance)?",choices:["Remains constant","Decreases uniformly","Increases uniformly","Becomes zero"],answer:2},
-  {q:"Why is the vertical component of velocity zero at the maximum height of a projectile?",choices:["Because gravity stops acting","Because the projectile momentarily stops moving upward before falling","Because air resistance is maximum","Because horizontal velocity equals vertical velocity"],answer:1},
-  {q:"How does the angle of projection affect the range of a projectile?",choices:["Range is maximum at 90°","Range is maximum at 45°","Range is independent of angle","Range is maximum at 0°"],answer:1},
-  {q:"Why do the horizontal and vertical components of projectile motion act independently?",choices:["Because they are in different dimensions","Because gravity only affects vertical motion","Because air resistance is negligible","Because velocity is constant"],answer:1},
-  {q:"How does Newton's First Law explain why passengers lurch forward when a car suddenly stops?",choices:["Because the car exerts a forward force","Because of inertia - the body tends to maintain its state of motion","Because of friction between seats and passengers","Because gravity pulls them forward"],answer:1},
-  {q:"Why does a heavier object require more force to accelerate at the same rate as a lighter object?",choices:["Because of air resistance","Because F = ma, so greater mass requires greater force for same acceleration","Because of gravitational pull","Because heavier objects have more friction"],answer:1},
-  {q:"How do action-reaction pairs in Newton's Third Law differ from balanced forces?",choices:["Action-reaction pairs act on different objects; balanced forces act on the same object","Action-reaction pairs cancel out; balanced forces don't","Action-reaction pairs are always equal; balanced forces are not","They are the same thing"],answer:0},
-  {situation:"A surveyor walks 50 meters due North, then 120 meters due East.",q:"What are the given in this problem?",choices:["Distance North = 50 m, Distance East = 120 m","Displacement = 50 m, Velocity = 120 m/s","Vector A = 50 m North, Time = 120 s","Speed = 50 m/s, Direction = 120°"],answer:0},
-  {situation:"A surveyor walks 50 meters due North, then 120 meters due East.",q:"What is asked in this problem?",choices:["The total distance traveled","The time taken for the journey","The resultant displacement","The average velocity"],answer:2},
-  {situation:"A surveyor walks 50 meters due North, then 120 meters due East.",q:"What is the solution?",choices:["170 m at 67.4° North of East","130 m at 67.4° East of North","130 m at 22.6° North of East","170 m at 22.6° East of North"],answer:1},
-  {situation:"Two forces act on an object: Force A = 30 N acting East and Force B = 40 N acting North.",q:"What are the given in this problem?",choices:["Force A = 30 N East, Force B = 40 N North","Weight = 30 N, Normal force = 40 N","Velocity = 30 m/s, Acceleration = 40 m/s²","Distance = 30 m, Height = 40 m"],answer:0},
-  {situation:"Two forces act on an object: Force A = 30 N acting East and Force B = 40 N acting North.",q:"What is asked in this problem?",choices:["The net acceleration of the object","The work done by the forces","The resultant force","The mass of the object"],answer:2},
-  {situation:"Two forces act on an object: Force A = 30 N acting East and Force B = 40 N acting North.",q:"What is the solution?",choices:["70 N at 53.1° North of East","50 N at 53.1° North of East","50 N at 36.9° North of East","70 N at 36.9° North of East"],answer:1},
-  {situation:"A car accelerates uniformly from rest to 25 m/s in 5 seconds.",q:"What are the given in this problem?",choices:["Initial velocity = 25 m/s, Final velocity = 0 m/s, Time = 5 s","Initial velocity = 0 m/s, Final velocity = 25 m/s, Time = 5 s","Distance = 25 m, Time = 5 s, Acceleration unknown","Velocity = 25 m/s, Distance = 5 m"],answer:1},
-  {situation:"A car accelerates uniformly from rest to 25 m/s in 5 seconds.",q:"What is asked in this problem?",choices:["The distance traveled","The acceleration of the car","The force applied","The final velocity"],answer:1},
-  {situation:"A car accelerates uniformly from rest to 25 m/s in 5 seconds.",q:"What is the solution?",choices:["2.5 m/s²","5.0 m/s²","7.5 m/s²","10.0 m/s²"],answer:1},
-  {situation:"A train moving at 20 m/s applies brakes and comes to rest after traveling 100 meters.",q:"What are the given in this problem?",choices:["Final velocity = 20 m/s, Distance = 100 m, Initial velocity = 0 m/s","Initial velocity = 20 m/s, Final velocity = 0 m/s, Distance = 100 m","Velocity = 20 m/s, Time = 100 s","Acceleration = 20 m/s², Distance = 100 m"],answer:1},
-  {situation:"A train moving at 20 m/s applies brakes and comes to rest after traveling 100 meters.",q:"What is asked in this problem?",choices:["The time taken to stop","The braking force","The deceleration","The initial velocity"],answer:2},
-  {situation:"A train moving at 20 m/s applies brakes and comes to rest after traveling 100 meters.",q:"What is the solution?",choices:["-1.0 m/s²","-2.0 m/s²","-4.0 m/s²","-5.0 m/s²"],answer:1},
-  {situation:"A ball is dropped from rest from a height of 80 meters. (Use g = 10 m/s²)",q:"What are the given in this problem?",choices:["Initial velocity = 10 m/s, Height = 80 m, g = 10 m/s²","Initial velocity = 0 m/s, Height = 80 m, g = 10 m/s²","Final velocity = 0 m/s, Distance = 80 m","Time = 80 s, Acceleration = 10 m/s²"],answer:1},
-  {situation:"A ball is dropped from rest from a height of 80 meters. (Use g = 10 m/s²)",q:"What is asked in this problem?",choices:["The acceleration of the ball","The mass of the ball","The time it takes to reach the ground","The height of the building"],answer:2},
-  {situation:"A ball is dropped from rest from a height of 80 meters. (Use g = 10 m/s²)",q:"What is the solution?",choices:["2 seconds","3 seconds","4 seconds","8 seconds"],answer:2},
-  {situation:"A cyclist travels 150 meters in 30 seconds with uniform velocity.",q:"What are the given in this problem?",choices:["Distance = 150 m, Velocity = 30 m/s","Distance = 150 m, Time = 30 s, Uniform velocity","Acceleration = 150 m/s², Time = 30 s","Initial velocity = 150 m/s, Final velocity = 30 m/s"],answer:1},
-  {situation:"A cyclist travels 150 meters in 30 seconds with uniform velocity.",q:"What is asked in this problem?",choices:["The acceleration","The velocity of the cyclist","The force applied","The distance traveled"],answer:1},
-  {situation:"A cyclist travels 150 meters in 30 seconds with uniform velocity.",q:"What is the solution?",choices:["3 m/s","4 m/s","5 m/s","6 m/s"],answer:2},
-  {situation:"A ball is thrown horizontally from a cliff 45 meters high with an initial velocity of 20 m/s. (Use g = 10 m/s²)",q:"What are the given in this problem?",choices:["Height = 45 m, Initial horizontal velocity = 20 m/s, g = 10 m/s²","Distance = 45 m, Final velocity = 20 m/s","Time = 45 s, Velocity = 20 m/s","Angle = 45°, Initial velocity = 20 m/s"],answer:0},
-  {situation:"A ball is thrown horizontally from a cliff 45 meters high with an initial velocity of 20 m/s. (Use g = 10 m/s²)",q:"What is asked in this problem?",choices:["The maximum height reached","The angle of projection","The horizontal distance traveled before hitting the ground","The initial vertical velocity"],answer:2},
-  {situation:"A ball is thrown horizontally from a cliff 45 meters high with an initial velocity of 20 m/s. (Use g = 10 m/s²)",q:"What is the solution?",choices:["40 m","50 m","60 m","80 m"],answer:2},
-  {situation:"A projectile is launched at 30° above the horizontal with an initial velocity of 40 m/s. (Use g = 10 m/s²)",q:"What are the given in this problem?",choices:["Angle = 30°, Initial velocity = 40 m/s, g = 10 m/s²","Height = 30 m, Velocity = 40 m/s","Time = 30 s, Distance = 40 m","Horizontal velocity = 30 m/s, Vertical velocity = 40 m/s"],answer:0},
-  {situation:"A projectile is launched at 30° above the horizontal with an initial velocity of 40 m/s. (Use g = 10 m/s²)",q:"What is asked in this problem?",choices:["The total time of flight","The range of the projectile","The maximum height reached","The initial kinetic energy"],answer:2},
-  {situation:"A projectile is launched at 30° above the horizontal with an initial velocity of 40 m/s. (Use g = 10 m/s²)",q:"What is the solution?",choices:["10 m","15 m","20 m","25 m"],answer:2},
-  {situation:"A soccer ball is kicked at an angle of 45° with an initial velocity of 20 m/s. (Use g = 10 m/s²)",q:"What are the given in this problem?",choices:["Angle = 45°, Initial velocity = 20 m/s, g = 10 m/s²","Distance = 45 m, Speed = 20 m/s","Height = 45 m, Time = 20 s","Force = 45 N, Mass = 20 kg"],answer:0},
-  {situation:"A soccer ball is kicked at an angle of 45° with an initial velocity of 20 m/s. (Use g = 10 m/s²)",q:"What is asked in this problem?",choices:["The time to reach maximum height","The maximum range of the ball","The final velocity","The acceleration at maximum height"],answer:1},
-  {situation:"A soccer ball is kicked at an angle of 45° with an initial velocity of 20 m/s. (Use g = 10 m/s²)",q:"What is the solution?",choices:["20 m","30 m","40 m","50 m"],answer:2},
-  {situation:"A 5 kg box is pushed across a frictionless surface with a force of 20 N.",q:"What are the given in this problem?",choices:["Mass = 5 kg, Velocity = 20 m/s","Mass = 5 kg, Force = 20 N, Frictionless surface","Weight = 5 N, Distance = 20 m","Acceleration = 5 m/s², Time = 20 s"],answer:1},
-  {situation:"A 5 kg box is pushed across a frictionless surface with a force of 20 N.",q:"What is asked in this problem?",choices:["The weight of the box","The friction force","The acceleration of the box","The distance traveled"],answer:2},
-  {situation:"A 5 kg box is pushed across a frictionless surface with a force of 20 N.",q:"What is the solution?",choices:["2 m/s²","4 m/s²","8 m/s²","10 m/s²"],answer:1},
-  {situation:"A 10 kg object is suspended by a rope. The object is at rest. (Use g = 10 m/s²)",q:"What are the given in this problem?",choices:["Mass = 10 kg, g = 10 m/s², Object at rest","Weight = 10 N, Acceleration = 10 m/s²","Force = 10 N, Distance = 10 m","Velocity = 10 m/s, Time = 10 s"],answer:0},
-  {situation:"A 10 kg object is suspended by a rope. The object is at rest. (Use g = 10 m/s²)",q:"What is asked in this problem?",choices:["The mass of the object","The acceleration of the object","The tension in the rope","The length of the rope"],answer:2},
-  {situation:"A 10 kg object is suspended by a rope. The object is at rest. (Use g = 10 m/s²)",q:"What is the solution?",choices:["10 N","50 N","100 N","200 N"],answer:2},
-  {situation:"A 2000 kg car experiences a net force of 4000 N while moving forward.",q:"What are the given in this problem?",choices:["Mass = 2000 kg, Net force = 4000 N","Weight = 2000 N, Velocity = 4000 m/s","Distance = 2000 m, Acceleration = 4000 m/s²","Force = 2000 N, Mass = 4000 kg"],answer:0},
-  {situation:"A 2000 kg car experiences a net force of 4000 N while moving forward.",q:"What is asked in this problem?",choices:["The velocity of the car","The weight of the car","The acceleration of the car","The stopping distance"],answer:2},
-  {situation:"A 2000 kg car experiences a net force of 4000 N while moving forward.",q:"What is the solution?",choices:["0.5 m/s²","1.0 m/s²","2.0 m/s²","4.0 m/s²"],answer:1},
-],
-
-midterm: [
-  {q:"What is the formula for centripetal force?",choices:["Fc = mv/r","Fc = v²/r","Fc = m²v/r","Fc = mv²/r"],answer:3},
-  {q:"What is the unit of centripetal acceleration?",choices:["N","rad/s","m/s²","kg·m/s"],answer:2},
-  {q:"What is the unit of torque?",choices:["Joule (J)","Newton (N)","Watt (W)","Newton-meter (N·m)"],answer:3},
-  {q:"Which of the following are the three conditions for equilibrium?",choices:["ΣFx=0; ΣFy=0; ΣM=0","ΣFx=1; ΣFy=1; ΣM=1","ΣFx=0; ΣFy=0; ΣM=1","ΣFx=0; ΣFy=1; ΣM=0"],answer:0},
-  {q:"Who formalized the two key conditions of equilibrium in the early 1800s?",choices:["Isaac Newton","Archimedes","Louis Poinsot","Leonardo da Vinci"],answer:2},
-  {q:"What is the unit of linear momentum?",choices:["kg·m/s²","N·m","kg·m/s","Watt (W)"],answer:2},
-  {q:"What are the three things that angular momentum depends on?",choices:["Force, mass and time","Mass, Angular Velocity and radius","Velocity, radius, and torque","Acceleration, mass, and displacement"],answer:1},
-  {q:"What is the formula for gravitational potential energy?",choices:["GPE = ½mv²","GPE = mv/h","GPE = mgh","GPE = Ft"],answer:2},
-  {q:"Who first defined work mathematically as force multiplied by displacement?",choices:["Isaac Newton","James Joule","Thomas Young","Gaspard-Gustave de Coriolis"],answer:3},
-  {q:"A car is traveling around a circular curve. If the speed of the car doubles while the radius stays the same, what happens to the centripetal force?",choices:["It doubles","It stays the same","It quadruples","It becomes half"],answer:2},
-  {q:"A ball is swung in a horizontal circle. If the radius of the circle is increased while the speed remains constant, what happens to the centripetal acceleration?",choices:["It increases","It stays the same","It doubles","It decreases"],answer:3},
-  {q:"A mechanic needs to loosen a bolt but struggles with a short wrench. If he switches to a longer wrench while applying the same force, what happens to the torque?",choices:["It decreases","It stays the same","It becomes zero","It increases"],answer:3},
-  {q:"A tightrope walker shifts their arms to one side. What must they do to maintain equilibrium?",choices:["Walk faster","Increase their weight","Adjust body position to balance force and torque","Stop moving entirely"],answer:2},
-  {q:"A beam is supported at both ends. If a heavy load is placed closer to one support, what happens to the reaction force at that support?",choices:["It decreases","It stays the same","It increases","It becomes zero"],answer:2},
-  {q:"In solving for the reaction forces of a beam, why is the sum of moments set to zero at one of the supports?",choices:["To eliminate one unknown and solve the equation","To calculate the weight of the beam","To find the angular velocity of the beam","To determine the material strength of the beam"],answer:0},
-  {q:"Two people carry a table, one on each end. One person lifts harder than the other. What happens to the table?",choices:["It moves faster","It tilts","It stays in equilibrium","It becomes lighter"],answer:1},
-  {q:"A marble and a large bato (stone) are both rolling toward you at the same speed along a neighborhood street. Which is harder to stop and why?",choices:["The marble, because it is smaller","The bato, because it has more mass and therefore more momentum","They are equally hard to stop because they have the same speed","The marble, because it has less friction"],answer:1},
-  {q:"An empty pedicab is rolling at a certain speed. When a passenger hops on, what happens to the momentum of the system?",choices:["It disappears because the system changed","It decreases because the speed slows down","It doubles because there is now an added person","It is conserved as what one object loses, another gains"],answer:3},
-  {q:"Two kalesa (horse-drawn carriages) have the same mass, but one moves twice as fast as the other along Intramuros. How does their momentum compare?",choices:["They have the same momentum","The faster kalesa has half the momentum","The slower kalesa has more momentum","The faster kalesa has twice the momentum"],answer:3},
-  {q:"Two boats collide on a river in Palawan. According to Newton, what happens to the total momentum of the system after the collision?",choices:["It increases","It decreases","It never changes","It doubles"],answer:2},
-  {q:"A tricycle driver pushes his vehicle along a flat road in Cagayan de Oro but it does not move. How much work did he do on the tricycle?",choices:["A lot, because he applied a large force","Some, because he exerted effort","Zero, because the tricycle did not move","Negative, because the tricycle pushed back"],answer:2},
-  {q:"A coconut falls from a tall tree in a farm in Davao. At the top of the tree, the coconut is nearly still. As it falls, what energy transformation takes place?",choices:["Kinetic energy transforms into gravitational potential energy","Gravitational potential energy transforms into kinetic energy","Work transforms into power","Power transforms into kinetic energy"],answer:1},
-  {q:"Two construction workers in Cebu carry the same load of hollow blocks up a flight of stairs. One finishes in 5 minutes and the other in 15 minutes. Who generated more power?",choices:["The slower worker, because he worked longer","They generated the same power because they did the same work","The faster worker, because he did the same work in less time","The slower worker, because he applied more force"],answer:2},
-  {q:"A student in a Manila university pushes a cabinet at an angle across a classroom floor. Why is the work done less compared to pushing it horizontally at the same force?",choices:["Because the cabinet is too heavy","Because only the horizontal component of the force contributes to the displacement","Because angled forces are always weaker","Because friction cancels out the work done"],answer:1},
-  {situation:"Mang Jose is a jeepney driver in Cagayan de Oro who regularly takes a curved road near Divisoria. His jeepney has a mass of 3,000 kg and travels at 15 m/s around a curved road with a radius of 60 m.",q:"On a rainy day, Mang Jose maintains the same speed but friction is reduced. Which of the following statements is correct?",choices:["The centripetal force required to maintain the curve increases","The jeepney will drift outward because the available friction can no longer sustain the curved path","Both A and B","Neither A nor B"],answer:1},
-  {situation:"Mang Jose is a jeepney driver in Cagayan de Oro who regularly takes a curved road near Divisoria. His jeepney has a mass of 3,000 kg and travels at 15 m/s around a curved road with a radius of 60 m.",q:"A passenger adds 200 kg worth of cargo to the jeepney while speed and radius remain constant. Which of the following statements is correct?",choices:["The centripetal force required increases because mass increased","The centripetal acceleration also increases because of the added mass","Both A and B","Neither A nor B"],answer:0},
-  {situation:"Mang Jose is a jeepney driver in Cagayan de Oro who regularly takes a curved road near Divisoria. His jeepney has a mass of 3,000 kg and travels at 15 m/s around a curved road with a radius of 60 m.",q:"Mang Jose compares two curves — one with a radius of 60 m and another with a radius of 120 m — at the same speed. Which of the following statements is correct?",choices:["The 60 m curve requires greater centripetal force than the 120 m curve","The 60 m curve produces greater centripetal acceleration than the 120 m curve","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Mang Jose is a jeepney driver in Cagayan de Oro who regularly takes a curved road near Divisoria. His jeepney has a mass of 3,000 kg and travels at 15 m/s around a curved road with a radius of 60 m.",q:"On a rainy day the friction is reduced by half. Mang Jose decides to slow down to stay safe. Which of the following statements is correct?",choices:["Reducing speed decreases the centripetal force required to navigate the curve","Reducing speed decreases the centripetal acceleration acting on the jeepney","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Mang Eddie is a mechanic in a repair shop in Cagayan de Oro. He applies a force of 50 N on a wrench 0.25 m long at a perpendicular angle. He then switches to a wrench 0.50 m long with the same force.",q:"Mang Eddie switches from a shorter to a longer wrench while applying the same force. Which of the following statements is correct?",choices:["The longer wrench produces greater torque because the moment arm increased","The angle of force application has no effect on the torque produced","Both A and B","Neither A nor B"],answer:0},
-  {situation:"Mang Eddie is a mechanic in a repair shop in Cagayan de Oro. He applies a force of 50 N on a wrench 0.25 m long at a perpendicular angle. He then switches to a wrench 0.50 m long with the same force.",q:"Mang Eddie's apprentice suggests applying the force at an angle less than 90° instead of perpendicular. Which of the following statements is correct?",choices:["Applying force at less than 90° reduces the torque because the sine of the angle decreases","The most effective torque is achieved when force is applied perpendicular to the wrench","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Aling Rosa has a 6 m wooden shelf weighing 300 N supported at both ends by two posts, R1 on the left and R2 on the right. She places a 400 N box 2 m from the left post and a 200 N sack 1 m from the right post.",q:"Aling Rosa places both loads on the shelf while it remains still and does not rotate. Which of the following statements is correct?",choices:["The sum of all vertical forces acting on the shelf must equal zero","The sum of all moments acting on the shelf must equal zero","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Aling Rosa has a 6 m wooden shelf weighing 300 N supported at both ends by two posts, R1 on the left and R2 on the right. She places a 400 N box 2 m from the left post and a 200 N sack 1 m from the right post.",q:"The 400 N box is placed closer to R1 than to R2. Which of the following statements is correct?",choices:["R1 carries a greater reaction force than R2 because the heavier load is closer to it","R2 carries a greater reaction force than R1 because it is farther from the heavier load","Both A and B","Neither A nor B"],answer:0},
-  {situation:"Aling Rosa has a 6 m wooden shelf weighing 300 N supported at both ends by two posts, R1 on the left and R2 on the right. She places a 400 N box 2 m from the left post and a 200 N sack 1 m from the right post.",q:"Aling Rosa sets the axis of moments at R1 to solve for R2. Which of the following statements is correct?",choices:["Setting the axis at R1 eliminates R1 from the moment equation, making it easier to solve for R2","The moment of R1 about its own axis is zero because its moment arm is zero","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Aling Rosa has a 6 m wooden shelf weighing 300 N supported at both ends by two posts, R1 on the left and R2 on the right. She places a 400 N box 2 m from the left post and a 200 N sack 1 m from the right post.",q:"Aling Rosa removes the sack of rice and places it directly above R2. Which of the following statements is correct?",choices:["The load placed directly above R2 produces no moment about R2 because its moment arm is zero","Removing the load from the middle of the shelf reduces the moment acting on the shelf","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Aling Rosa has a 6 m wooden shelf weighing 300 N supported at both ends by two posts, R1 on the left and R2 on the right. She places a 400 N box 2 m from the left post and a 200 N sack 1 m from the right post.",q:"Aling Rosa adds more softdrinks, increasing the box load from 400 N to 600 N at the same position. Which of the following statements is correct?",choices:["The reaction force at R1 increases because the heavier load is closer to it","The reaction force at R2 also changes because the total vertical force must still equal zero","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Aling Rosa has a 6 m wooden shelf weighing 300 N supported at both ends by two posts, R1 on the left and R2 on the right.",q:"Aling Rosa's shelf is currently in equilibrium. Her neighbor suggests removing one of the two support posts. Which of the following statements is correct?",choices:["Removing one post means there are no longer enough reaction forces to satisfy ΣFy=0","The shelf will rotate and collapse because ΣM=0 can no longer be satisfied with only one support","Both A and B","Neither A nor B"],answer:2},
-  {situation:"During a fiesta in Cagayan de Oro, Ardo has a cart with a mass of 4 kg rolling at 3 m/s, while Ding has a heavier cart with a mass of 6 kg rolling at 2 m/s in the same direction. Ardo pushes his cart with an additional force of 10 N for 2 seconds. The two carts eventually collide and stick together.",q:"Before the collision, Ardo and Ding compare whose cart has more momentum. Which of the following statements is correct?",choices:["Ardo's cart has more momentum because it is moving faster","Both carts have equal momentum of 12 kg·m/s","Both A and B","Neither A nor B"],answer:1},
-  {situation:"During a fiesta in Cagayan de Oro, Ardo has a cart with a mass of 4 kg rolling at 3 m/s, while Ding has a heavier cart with a mass of 6 kg rolling at 2 m/s in the same direction. Ardo pushes his cart with an additional force of 10 N for 2 seconds. The two carts eventually collide and stick together.",q:"Ardo applies a force of 10 N on his cart for 2 seconds before the collision. Which of the following statements is correct?",choices:["The impulse applied to Ardo's cart is 20 N·s, which increases its momentum","The longer Ardo applies the force, the greater the change in momentum of his cart","Both A and B","Neither A nor B"],answer:2},
-  {situation:"During a fiesta in Cagayan de Oro, Ardo has a cart with a mass of 4 kg rolling at 3 m/s, while Ding has a heavier cart with a mass of 6 kg rolling at 2 m/s in the same direction. Ardo pushes his cart with an additional force of 10 N for 2 seconds. The two carts eventually collide and stick together.",q:"After Ardo's push, his cart is now moving faster before the collision. Which of the following statements is correct?",choices:["The increase in speed increases the momentum of Ardo's cart","The mass of Ardo's cart also increases because of the added push","Both A and B","Neither A nor B"],answer:0},
-  {situation:"During a fiesta in Cagayan de Oro, Ardo has a cart with a mass of 4 kg rolling at 3 m/s, while Ding has a heavier cart with a mass of 6 kg rolling at 2 m/s in the same direction. Ardo pushes his cart with an additional force of 10 N for 2 seconds. The two carts eventually collide and stick together.",q:"The two carts collide and stick together. Which of the following statements is correct?",choices:["The total momentum of the system before the collision equals the total momentum after the collision","The combined cart moves slower than either individual cart before the collision because the total mass increased","Both A and B","Neither A nor B"],answer:2},
-  {situation:"During a fiesta in Cagayan de Oro, Ardo has a cart with a mass of 4 kg rolling at 3 m/s, while Ding has a heavier cart with a mass of 6 kg rolling at 2 m/s in the same direction.",q:"Ding puts a cushion on the front of his cart to absorb the impact of the collision. Which of the following statements is correct?",choices:["The cushion extends the time of impact, reducing the force experienced during the collision","The cushion changes the total momentum of the system after the collision","Both A and B","Neither A nor B"],answer:0},
-  {situation:"During a fiesta in Cagayan de Oro, after the collision, the combined cart slows down due to friction on the street.",q:"Which of the following statements is correct?",choices:["The friction force acts as an external force that reduces the total momentum of the system","The system is no longer closed because an external force is acting on it, so momentum is not conserved","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Mang Tino carries a 20 kg sack of cement up a flight of stairs 4 m high in 10 seconds. His co-worker Berting carries the same sack up the same stairs but takes 20 seconds. Later, Mang Tino pushes a 30 kg cart of gravel with a force of 60 N at an angle of 30° across a 10 m flat surface.",q:"Mang Tino and Berting both carry the same sack up the same flight of stairs. Which of the following statements is correct?",choices:["Mang Tino generates more power because he does the same work in less time","Both Mang Tino and Berting do the same amount of work because the force and displacement are the same","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Mang Tino carries a 20 kg sack of cement up a flight of stairs 4 m high in 10 seconds.",q:"At the top of the stairs, the sack of cement is momentarily at rest before Mang Tino sets it down. Which of the following statements is correct?",choices:["The sack has maximum gravitational potential energy at the top of the stairs","The sack has maximum kinetic energy at the top of the stairs because it just finished moving","Both A and B","Neither A nor B"],answer:0},
-  {situation:"Mang Tino carries a 20 kg sack of cement up a flight of stairs 4 m high. The sack is accidentally dropped from the top.",q:"As the sack of cement is accidentally dropped from the top of the stairs, it falls toward the ground. Which of the following statements is correct?",choices:["The gravitational potential energy of the sack decreases as it falls","The kinetic energy of the sack increases as it falls because it gains speed","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Mang Tino pushes a 30 kg cart of gravel with a force of 60 N at an angle of 30° across a 10 m flat surface.",q:"Mang Tino pushes the cart of gravel at an angle of 30° instead of horizontally. Which of the following statements is correct?",choices:["Only the horizontal component of the force contributes to the work done on the cart","Pushing at an angle of 30° produces less work than pushing horizontally with the same force","Both A and B","Neither A nor B"],answer:2},
-  {situation:"Mang Tino pushes the cart of gravel horizontally instead of at an angle.",q:"Berting suggests that pushing the cart of gravel horizontally instead of at an angle would be more efficient. Which of the following statements is correct?",choices:["Pushing horizontally maximizes the force component in the direction of displacement, increasing the work done","Pushing at an angle increases the work done because the force is greater","Both A and B","Neither A nor B"],answer:0},
-  {situation:"At the end of the day, Mang Tino carried more loads and pushed more carts than Berting in the same amount of time.",q:"Which of the following statements is correct?",choices:["Mang Tino did more work than Berting because he moved more loads over the same displacement","Mang Tino generated more power than Berting because he did more work in the same amount of time","Both A and B","Neither A nor B"],answer:2},
-  {situation:"A car travels at 20 m/s around a circular curve with a radius of 50 m. (A–M: mass = 1,000 kg | N–Z: mass = 1,500 kg)",q:"What is the centripetal force acting on the car? Use mass = 1,000 kg.",choices:["4,000 N","8,000 N","12,000 N","6,000 N"],answer:1},
-  {situation:"A car travels around a circular curve at a radius of 50 m. (A–M: mass = 1,000 kg, v = 20 m/s | N–Z: mass = 1,000 kg, v = 30 m/s)",q:"What is the centripetal force acting on the car? Use mass = 1,000 kg, v = 20 m/s.",choices:["8,000 N","12,000 N","18,000 N","6,000 N"],answer:0},
-  {situation:"A mechanic applies a force perpendicular to a wrench handle at a length of 0.30 m. (A–M: force = 40 N | N–Z: force = 60 N)",q:"What is the torque produced? Use force = 40 N.",choices:["12 N·m","18 N·m","9 N·m","24 N·m"],answer:0},
-  {situation:"A uniform beam weighing 200 N is supported at both ends. A box sits 1 m from the left end. Beam length = 4 m. (A–M: box weight = 500 N | N–Z: box weight = 700 N)",q:"What is the reaction force at the right support (R₂)? Use box weight = 500 N.",choices:["225 N","275 N","350 N","175 N"],answer:0},
-  {situation:"A uniform beam weighing 200 N is supported at both ends with a length of 4 m. A 500 N box sits on the beam. (A–M: box is 1 m from the left end | N–Z: box is 2 m from the left end)",q:"What is the reaction force at the left support (R₁)? Use box 1 m from left end.",choices:["475 N","425 N","350 N","325 N"],answer:0},
-  {situation:"A uniform beam is supported at both ends with a 500 N box sitting 1 m from the left end. (A–M: beam length = 4 m, beam weight = 200 N | N–Z: beam length = 6 m, beam weight = 200 N)",q:"What is the reaction force at the right support (R₂)? Use beam length = 4 m.",choices:["225 N","175 N","158.33 N","191.67 N"],answer:0},
-  {situation:"A skateboard is rolling at 3 m/s. (A–M: mass = 5 kg | N–Z: mass = 8 kg)",q:"What is its momentum? Use mass = 5 kg.",choices:["15 N·s","24 N·s","10 N·s","18 N·s"],answer:0},
-  {situation:"A skateboarder jumps onto a rolling skateboard, slowing it down to 0.5 m/s. (A–M: total mass = 65 kg | N–Z: total mass = 80 kg)",q:"What is the new momentum of the skateboarder and board combined? Use total mass = 65 kg.",choices:["32 N·s","40 N·s","25 N·s","48 N·s"],answer:0},
-  {situation:"A 0.5 kg ball is moving at 4 m/s. A player kicks it in the same direction for 0.3 seconds. (A–M: force = 80 N | N–Z: force = 100 N)",q:"What is the ball's final velocity? Use force = 80 N.",choices:["52 m/s","64 m/s","40 m/s","48 m/s"],answer:0},
-  {situation:"A person pushes a box with a force at an angle of 30° above the horizontal across a distance of 5 m. (A–M: force = 50 N | N–Z: force = 80 N)",q:"How much work is done? Use force = 50 N.",choices:["216.51 J","346.41 J","125 J","200 J"],answer:0},
-  {situation:"A ball is dropped from rest. (A–M: mass = 2 kg, height = 10 m | N–Z: mass = 3 kg, height = 10 m)",q:"What is its gravitational potential energy at the top? Use mass = 2 kg, height = 10 m.",choices:["196 J","294 J","150 J","245 J"],answer:0},
-  {situation:"A student climbs a flight of stairs 4 m high in 8 seconds. (A–M: mass = 60 kg | N–Z: mass = 75 kg)",q:"How much power did the student generate? Use mass = 60 kg.",choices:["294 W","367.5 W","240 W","320 W"],answer:0},
-],
-
-prefinal: [
-  {q:"How is pressure transmitted when it is applied to an enclosed fluid?",choices:["Only downward due to gravity","Only to the nearest surface","Equally in all directions throughout the fluid","Only in the direction of the applied force"],answer:2},
-  {q:"What is the relationship between hydrostatic pressure and the depth of a fluid?",choices:["Pressure decreases as depth increases","Pressure remains constant regardless of depth","Pressure increases as depth increases","Pressure is independent of depth but dependent on volume"],answer:2},
-  {q:"Which formula correctly expresses hydrostatic pressure?",choices:["P = ρgh","P = mv²","P = F/m","P = ρgV"],answer:0},
-  {q:"What are the standard SI units of pressure?",choices:["Newton (N)","Pascal (Pa)","Joule (J)","Watt (W)"],answer:1},
-  {q:"On which conservation principle is the Continuity Equation in fluid mechanics based?",choices:["Conservation of Energy","Conservation of Momentum","Conservation of Mass","Conservation of Pressure"],answer:2},
-  {q:"What happens to the speed of a fluid when it flows from a wider pipe into a narrower pipe?",choices:["It decreases","It remains the same","It increases","It becomes zero"],answer:2},
-  {q:"Which of the following correctly expresses the Continuity Equation for an incompressible fluid?",choices:["A₁v₁ = A₂v₂","P₁ + v₁ = P₂ + v₂","F₁/A₁ = F₂/A₂","ρ₁A₁ = ρ₂A₂"],answer:0},
-  {q:"Which quantities does Bernoulli's Principle relate to the speed of a fluid?",choices:["Temperature and volume","Pressure and height","Viscosity and density","Mass and acceleration"],answer:1},
-  {q:"What does Bernoulli's Principle assume about the fluid it describes?",choices:["The fluid is compressible and viscous","The fluid is incompressible and non-viscous","The fluid is stationary and dense","The fluid is turbulent and heated"],answer:1},
-  {q:"Which of the following is the correct expression of Bernoulli's equation?",choices:["P + ½ρv² + ρgh = constant","P + ρgh = ½mv²","P = ρv² + gh","P + ½ρv = ρgh"],answer:0},
-  {q:"What property of a fluid does viscosity describe?",choices:["Its resistance to compression","Its resistance to flow","Its resistance to expansion","Its resistance to evaporation"],answer:1},
-  {q:"What phenomenon occurs when a liquid rises or falls inside a narrow tube against or along the force of gravity?",choices:["Viscosity","Turbulence","Capillarity","Buoyancy"],answer:2},
-  {q:"A mechanic applies force to a small piston in a hydraulic jack. What happens to the pressure at the larger piston?",choices:["It decreases proportionally","It remains unchanged","It becomes the same as at the small piston","It disappears entirely"],answer:1},
-  {q:"A water tank has two holes at different depths. Which hole produces higher water pressure?",choices:["The hole nearer the surface","The hole at the bottom","Both produce equal pressure","Pressure depends only on the tank's width"],answer:1},
-  {q:"A diver descends deeper into Hinatuan Enchanted River. What happens to the pressure the diver experiences?",choices:["It decreases","It stays the same","It increases","It fluctuates randomly"],answer:2},
-  {q:"A student measures water pressure at 5 m depth and again at 10 m depth. How do the two pressure readings compare?",choices:["They are equal","The reading at 10 m is lower","The reading at 10 m is double that at 5 m","The reading at 5 m is greater"],answer:2},
-  {q:"Water flows through a garden hose. When the gardener partially covers the opening, the water shoots out faster. Which principle explains this?",choices:["Pascal's Principle","Archimedes' Principle","The Continuity Equation","Bernoulli's Principle"],answer:2},
-  {q:"A river in Agusan narrows as it passes through a canyon. What happens to the water's speed in the narrow section?",choices:["It slows down","It speeds up","It stops momentarily","It remains the same"],answer:1},
-  {q:"A pipe carrying water splits into two smaller pipes of equal size. How is the flow rate distributed?",choices:["All flow goes into one pipe","The flow rate doubles in each smaller pipe","Each smaller pipe carries half the original flow rate","The flow rate remains the same in each pipe"],answer:2},
-  {q:"An airplane wing is shaped so that air moves faster over the top than beneath it. What results from this difference in speed?",choices:["Higher pressure above the wing, creating lift","Lower pressure above the wing, creating lift","Equal pressure on both sides, creating stability","Higher pressure below the wing, pushing it down"],answer:1},
-  {q:"Water flows rapidly through a narrow section of a pipe. Compared to a wider section, what is true about the pressure in the narrow section?",choices:["Pressure is higher in the narrow section","Pressure is equal throughout","Pressure is lower in the narrow section","Pressure depends only on fluid density"],answer:2},
-  {q:"A leaking pipe sprays water horizontally from a small hole. As water speed through the hole increases, what happens to the pressure inside the pipe at that point?",choices:["It increases","It decreases","It stays the same","It becomes zero"],answer:1},
-  {q:"Honey pours much more slowly than water from the same container. What property of honey explains this?",choices:["Higher capillarity","Lower density","Higher viscosity","Lower surface tension"],answer:2},
-  {q:"A thin glass tube is placed in a bowl of water and the water rises inside the tube. What phenomenon is being observed?",choices:["Viscosity","Capillarity","Buoyancy","Turbulence"],answer:1},
-  {situation:"A small force is applied to the narrow piston of a hydraulic press in a repair shop in Surigao City.",q:"Statement 1: The pressure transmitted to the wider piston is equal to the pressure at the narrow piston. Statement 2: The force produced at the wider piston is greater than the applied force.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:2},
-  {situation:"A jeepney's hydraulic brake system is filled with brake fluid. The driver presses the brake pedal.",q:"Statement 1: The pressure is transmitted only toward the nearest brake cylinder. Statement 2: The braking force at the wheels is smaller than the force applied at the pedal.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:3},
-  {situation:"Two divers explore Surigao Strait. Diver A is at 10 m depth and Diver B is at 30 m depth.",q:"Statement 1: Diver B experiences three times the hydrostatic pressure of Diver A. Statement 2: The difference in pressure between the two divers depends on the density of seawater and gravitational acceleration.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:2},
-  {situation:"A rectangular fish tank and a cylindrical aquarium are both filled with freshwater to a depth of 40 cm.",q:"Statement 1: The hydrostatic pressure at the bottom of the fish tank is greater because it has a larger base area. Statement 2: The hydrostatic pressure at the bottom of both containers is equal because depth and fluid density are the same.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:1},
-  {situation:"A water storage tank in a barangay in Butuan City develops two leaks — one near the top and one near the bottom.",q:"Statement 1: The leak near the bottom releases water with greater force due to higher hydrostatic pressure. Statement 2: The pressure at the bottom leak is greater because it supports more weight of water above it.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:2},
-  {situation:"A student calculates hydrostatic pressure at 5 m depth in freshwater and then in seawater at the same depth.",q:"Statement 1: The pressure in seawater is greater because seawater has a higher density than freshwater. Statement 2: The pressure in freshwater is greater because freshwater flows more freely than seawater.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"A diver in Hinatuan Enchanted River descends from 5 m to 15 m depth. A classmate claims that pressure tripled because depth tripled.",q:"Statement 1: The classmate is correct because hydrostatic pressure is directly proportional to depth. Statement 2: The pressure at 15 m is exactly triple the pressure at 5 m only if measured from the surface as gauge pressure.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:2},
-  {situation:"A river in Agusan del Norte narrows as it passes through a rocky canyon.",q:"Statement 1: The water speeds up in the narrow section to maintain constant flow rate. Statement 2: The volume flow rate in the narrow section is greater than in the wider section.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"A firefighter in Surigao City uses a hose with a narrow nozzle. The nozzle is much smaller than the hose diameter.",q:"Statement 1: The water exits the nozzle at a higher speed than inside the hose. Statement 2: The flow rate of water increases as it passes through the narrow nozzle.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"Water flows through a pipe that suddenly widens. An engineering student states that the flow rate before and after the widening must be equal.",q:"Statement 1: The student is correct because mass must be conserved in continuous flow. Statement 2: The velocity of water increases as the pipe widens.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"A pipe branches into two equal smaller pipes. A student claims each smaller pipe carries the same flow rate as the original pipe.",q:"Statement 1: The student is incorrect; each smaller pipe carries half the original flow rate. Statement 2: The total flow rate after branching is greater than before branching.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"Two pipes carry water from the same source. Pipe X has twice the cross-sectional area of Pipe Y and both carry the same flow rate.",q:"Statement 1: Water in Pipe Y flows twice as fast as in Pipe X. Statement 2: Water in Pipe X flows twice as fast as in Pipe Y because it has more space.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"An airplane flying over Mindanao has wings shaped so that air moves faster over the top surface than beneath it.",q:"Statement 1: The faster-moving air above the wing creates lower pressure, producing upward lift. Statement 2: The slower-moving air beneath the wing creates lower pressure, pulling the wing downward.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"Water flows through a horizontal pipe that narrows in the middle. Pressure gauges are installed at both the wide and narrow sections.",q:"Statement 1: The pressure reading is lower at the narrow section where water moves faster. Statement 2: The pressure reading is higher at the narrow section because more water is being forced through.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"Two identical pipes carry water at the same speed. One pipe is elevated 5 m higher than the other.",q:"Statement 1: The pressure in the lower pipe is greater than in the elevated pipe. Statement 2: According to Bernoulli's Principle, elevation has no effect on fluid pressure.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"A student covers part of a garden hose opening with a thumb. The water shoots out faster.",q:"Statement 1: The increase in water speed is consistent with the Continuity Equation, not Bernoulli's Principle. Statement 2: The pressure inside the hose at the covered opening increases as the water speeds up.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"A spinning ball thrown by a pitcher curves in the air because spin causes air to move faster on one side.",q:"Statement 1: The side where air moves faster has lower pressure, causing the ball to curve toward that side. Statement 2: The side where air moves slower has lower pressure, so the ball curves away from that side.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"A Venturi meter is installed in a water pipeline in Cagayan de Oro to measure flow rate. The meter shows lower pressure at the narrow section.",q:"Statement 1: The lower pressure at the narrow section indicates faster water flow there. Statement 2: The Venturi meter works by applying Pascal's Principle to relate pressure and velocity.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"A container of honey takes significantly longer to empty than a container of water of the same volume.",q:"Statement 1: Honey has a higher viscosity than water, meaning it resists flow more strongly. Statement 2: Honey flows slower because it has a lower density than water.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"Engine oil in a vehicle becomes thinner when the engine heats up during a long drive from Cagayan de Oro to Davao.",q:"Statement 1: The viscosity of the oil decreases as temperature increases. Statement 2: Lower viscosity means the oil resists flow more, providing better engine protection at high temperatures.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"A thin glass tube is inserted into a bowl of water and another into a bowl of mercury. The water rises inside the tube while the mercury is depressed.",q:"Statement 1: Water rises because adhesive forces between water and glass are stronger than cohesive forces within water. Statement 2: Mercury is depressed because adhesive forces between mercury and glass are stronger than cohesive forces within mercury.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"Two capillary tubes of different diameters are placed in the same liquid. Tube A has a smaller diameter than Tube B.",q:"Statement 1: The liquid rises higher in Tube A than in Tube B. Statement 2: The height of capillary rise increases as tube diameter increases.",choices:["Only Statement 1 is correct","Only Statement 2 is correct","Both statements are correct","Neither statement is correct"],answer:0},
-  {situation:"A hydraulic press in Surigao City has a small piston with a radius of 0.05 m and a large piston with a radius of 0.20 m. A force of 500 N is applied to the small piston.",q:"What is the area of the small piston?",choices:["0.00196 m²","0.0157 m²","0.0314 m²","0.00628 m²"],answer:1},
-  {situation:"A hydraulic press in Surigao City has a small piston with a radius of 0.05 m and a large piston with a radius of 0.20 m. A force of 500 N is applied to the small piston.",q:"What is the area of the large piston?",choices:["0.0628 m²","0.1257 m²","0.2513 m²","0.0314 m²"],answer:1},
-  {situation:"A hydraulic press in Surigao City has a small piston with a radius of 0.05 m and a large piston with a radius of 0.20 m. A force of 500 N is applied to the small piston.",q:"What is the pressure applied to the fluid by the small piston?",choices:["255,102 Pa","63,694 Pa","31,250 Pa","15,924 Pa"],answer:1},
-  {situation:"A hydraulic press in Surigao City has a small piston with a radius of 0.05 m and a large piston with a radius of 0.20 m. A force of 500 N is applied to the small piston.",q:"Using the pressure from the previous item, what is the force exerted by the large piston?",choices:["4,000 N","6,000 N","8,010 N","10,000 N"],answer:2},
-  {situation:"A hydraulic press in Surigao City has a small piston with a radius of 0.05 m and a large piston with a radius of 0.20 m. A force of 500 N is applied to the small piston.",q:"What is the mechanical advantage of this hydraulic press?",choices:["6","3","8","32"],answer:2},
-  {situation:"A water tank in Lianga, Surigao del Sur is filled with freshwater (ρ = 1000 kg/m³). The tank has a depth of 4 m. A small opening is located 1.5 m from the bottom of the tank. Take g = 9.8 m/s².",q:"What is the depth of the opening measured from the water surface?",choices:["1.5 m","2.5 m","4.0 m","5.5 m"],answer:1},
-  {situation:"A water tank in Lianga, Surigao del Sur is filled with freshwater (ρ = 1000 kg/m³). The tank has a depth of 4 m. A small opening is located 1.5 m from the bottom of the tank. Take g = 9.8 m/s².",q:"What is the hydrostatic pressure at the opening?",choices:["14,700 Pa","24,500 Pa","39,200 Pa","19,600 Pa"],answer:1},
-  {situation:"A water tank in Lianga, Surigao del Sur is filled with freshwater (ρ = 1000 kg/m³). The tank has a depth of 4 m. A small opening is located 1.5 m from the bottom of the tank. Take g = 9.8 m/s².",q:"If the area of the opening is 0.002 m², what is the force exerted by the water on the opening?",choices:["24.5 N","49.0 N","12.25 N","98.0 N"],answer:1},
-  {situation:"Water flows through a pipe in an irrigation canal in Bukidnon. The pipe has a cross-sectional area of 0.08 m² at Section 1 where water flows at 3 m/s. The pipe narrows to 0.02 m² at Section 2.",q:"What is the volume flow rate at Section 1?",choices:["0.18 m³/s","0.24 m³/s","0.12 m³/s","0.36 m³/s"],answer:1},
-  {situation:"Water flows through a pipe in an irrigation canal in Bukidnon. The pipe has a cross-sectional area of 0.08 m² at Section 1 where water flows at 3 m/s. The pipe narrows to 0.02 m² at Section 2.",q:"Using the Continuity Equation, what is the flow rate at Section 2?",choices:["0.12 m³/s","0.06 m³/s","0.24 m³/s","0.48 m³/s"],answer:0},
-  {situation:"Water flows through a pipe in an irrigation canal in Bukidnon. The pipe has a cross-sectional area of 0.08 m² at Section 1 where water flows at 3 m/s. The pipe narrows to 0.02 m² at Section 2.",q:"What is the velocity of water at Section 2?",choices:["6 m/s","9 m/s","12 m/s","3 m/s"],answer:2},
-  {situation:"Water flows horizontally through a pipe in Cagayan de Oro. At Point 1: area = 0.05 m², v = 2 m/s, P = 150,000 Pa. At Point 2: area = 0.02 m². ρ = 1000 kg/m³.",q:"Using the Continuity Equation, what is the velocity of water at Point 2?",choices:["3 m/s","4 m/s","5 m/s","6 m/s"],answer:2},
-  {situation:"Water flows horizontally through a pipe in Cagayan de Oro. At Point 1: area = 0.05 m², v = 2 m/s, P = 150,000 Pa. At Point 2: area = 0.02 m². ρ = 1000 kg/m³.",q:"What is the value of the kinetic energy term (½ρv²) of the fluid at Point 1?",choices:["6,000 Pa","5,000 Pa","3,000 Pa","2,000 Pa"],answer:3},
-  {situation:"Water flows horizontally through a pipe in Cagayan de Oro. At Point 1: area = 0.05 m², v = 2 m/s, P = 150,000 Pa. At Point 2: area = 0.02 m². ρ = 1000 kg/m³.",q:"Using Bernoulli's equation, what is the pressure at Point 2?",choices:["139,500 Pa","145,500 Pa","152,000 Pa","137,500 Pa"],answer:0},
-],
-
-final: [
-  {q:"The Zeroth Law of Thermodynamics was formally named after the First and Second Laws were already established. Who is credited with coining the name \"zeroth law\" in 1931?",choices:["Rudolf Clausius","Ludwig Boltzmann","Ralph Fowler","Lord Kelvin"],answer:2},
-  {q:"Which physical quantity is defined as the property whose equality between two systems signals that they are in thermal equilibrium with each other?",choices:["Entropy","Temperature","Internal energy","Heat capacity"],answer:1},
-  {q:"The First Law of Thermodynamics expressed as ΔU = Q − W fundamentally represents which principle?",choices:["The direction of spontaneous heat flow in nature","The relationship between entropy and temperature","The conservation of energy accounting for heat and work","The maximum efficiency achievable by any heat engine"],answer:2},
-  {q:"For which thermodynamic process does the First Law of Thermodynamics simplify to ΔU = −W?",choices:["Isothermal","Isobaric","Isochoric","Adiabatic"],answer:3},
-  {q:"Fourier's Law of heat conduction states that the rate of heat flow through a material is directly proportional to which combination of quantities?",choices:["Thickness of the material and temperature difference only","Thermal conductivity, cross-sectional area, and temperature difference","Density and specific heat of the material","Temperature difference and thickness only"],answer:1},
-  {q:"Among the following materials, which has the highest thermal conductivity?",choices:["Wood","Glass","Air","Copper"],answer:3},
-  {q:"The Kelvin–Planck statement of the Second Law of Thermodynamics states that:",choices:["Heat spontaneously flows from cold to hot bodies","The entropy of any isolated system always decreases","No heat engine can convert all absorbed heat into useful work","Work can be fully converted into heat without any other effect"],answer:2},
-  {q:"The Coefficient of Performance (COP) of a heat pump is defined as:",choices:["W / Qcold","Qcold / W","Qhot / W","W / Qhot"],answer:2},
-  {q:"The principle stating that any measurable electric charge must be an integer multiple of the elementary charge e is called:",choices:["Conservation of charge","Charge neutrality","Charge quantization","Coulomb's principle"],answer:2},
-  {q:"According to Coulomb's Law, if the distance between two point charges is tripled while their magnitudes remain unchanged, what happens to the electrostatic force between them?",choices:["It becomes 3 times larger","It becomes 1/3 of the original","It becomes 9 times larger","It becomes 1/9 of the original"],answer:3},
-  {q:"Which equation correctly expresses Ohm's Law?",choices:["V = I / R","R = V × I","I = V / R","I = R / V"],answer:2},
-  {q:"The SI unit of electrical resistance, the ohm (Ω), is equivalent to which of the following?",choices:["1 A/V","1 C/s","1 V·A","1 V/A"],answer:3},
-  {q:"A thermometer is described as the \"third system\" in applying the Zeroth Law. Which statement best explains the role it plays in temperature measurement?",choices:["It generates heat absorbed equally by both systems being compared.","It measures the total thermal energy stored in each system.","It transfers heat from the hotter to the colder system until balance is reached.","It establishes thermal equilibrium with each system separately, allowing their temperatures to be compared indirectly."],answer:3},
-  {q:"A student claims that two objects can only be in thermal equilibrium if they are made of the same material. Which statement best explains why this is incorrect?",choices:["Thermal equilibrium requires equal mass, not the same material.","Only metals can reach thermal equilibrium because non-metals are poor conductors.","Thermal equilibrium is reached when two systems share the same temperature, regardless of material composition.","Thermal equilibrium depends on internal energy, so material is irrelevant only for gases."],answer:2},
-  {q:"A student confuses heat and internal energy, claiming they are the same thing. Which statement best corrects this misconception?",choices:["Heat is stored inside a system; internal energy is transferred between systems.","Internal energy only exists in gases; heat applies to solids and liquids.","Heat and internal energy are the same — both refer to the total kinetic energy of molecules.","Internal energy is a property a system possesses; heat is energy in transit between systems due to a temperature difference."],answer:3},
-  {q:"In the equation ΔU = Q − W, what does a negative value of ΔU correctly indicate about the system?",choices:["The system absorbed more heat than the work it performed.","The system released more energy through heat and work combined than it received.","The work done by the system was zero throughout the process.","The heat added to the system was negative and work was positive, but they were equal."],answer:1},
-  {q:"A wooden wall and a steel wall of identical thickness and area are exposed to the same temperature difference. Which statement correctly explains why the steel wall conducts heat faster?",choices:["Steel is denser, so it stores more thermal energy and releases it faster.","Wood has a higher specific heat capacity, which absorbs heat before it can pass through.","Steel has a higher thermal conductivity, meaning it allows heat to flow more readily through its structure.","Steel has a lower melting point, allowing thermal energy to pass through more easily."],answer:2},
-  {q:"An engineer wants to reduce the rate of heat conduction through a wall without changing its area or the temperature difference across it. Which strategy is consistent with Fourier's Law?",choices:["Replace the wall material with one of higher thermal conductivity and decrease thickness.","Increase the thickness of the wall or use a material with lower thermal conductivity.","Decrease the thickness of the wall while keeping the same material.","Increase the area of the wall while keeping all other variables constant."],answer:1},
-  {q:"A student argues that a refrigerator violates the Second Law of Thermodynamics because it moves heat from a cold compartment to a warmer room. Which response best explains why this argument is incorrect?",choices:["Refrigerators are exempt from the Second Law because the process is reversible.","The Second Law only applies to heat engines, not refrigeration systems.","The refrigerator does not violate the Second Law because it requires external work input to move heat from cold to hot, which the law permits.","The Second Law does not apply to refrigerators because they use electrical energy."],answer:2},
-  {q:"Two heat engines operate between the same hot and cold reservoirs. Engine X is a Carnot engine and Engine Y is a real engine. Which statement best describes the relationship between their efficiencies?",choices:["Engine Y is more efficient because real engines are optimized through engineering improvements.","Both engines have the same efficiency since they operate between the same two temperatures.","Engine X has the maximum possible efficiency; Engine Y must be less efficient because real processes involve irreversibility.","Engine X is less efficient because the Carnot cycle is purely theoretical and ignores practical design."],answer:2},
-  {q:"A charged balloon is pressed against a neutral wall and sticks to it. Which concept best explains this observation?",choices:["The balloon acquires a net charge equal to the wall's charge, causing mutual attraction.","The charged balloon induces a redistribution of charges on the wall's surface, creating a localized opposite charge that attracts the balloon.","The wall becomes permanently charged after contact with the balloon.","Coulomb's Law does not apply here because the wall has zero net charge throughout."],answer:1},
-  {q:"Electric potential is sometimes described as \"electrical height.\" Which of the following best explains what this analogy means?",choices:["Charges always move from low potential to high potential, just as water flows uphill.","Electric potential measures the total charge stored at a point, similar to how height measures stored water volume.","Potential difference and gravitational force are mathematically identical in form.","Just as a ball at greater height has more gravitational potential energy per unit mass, a positive charge at higher electric potential has more electric potential energy per unit charge."],answer:3},
-  {q:"A copper wire and a nichrome wire have the same length and cross-sectional area but different resistivities. Which statement best explains why nichrome is preferred in electric heaters over copper?",choices:["Nichrome has lower resistance, allowing more current and producing more heat.","Copper melts at lower temperatures, making it unsafe for heating elements.","Nichrome has higher resistivity, so it dissipates more electrical energy as heat for the same current.","Copper has higher resistivity, making it less suitable for general wiring."],answer:2},
-  {q:"A student claims that if the resistance in a circuit doubles, the power consumed also doubles, provided the voltage stays the same. Which response correctly evaluates this claim?",choices:["The claim is correct — doubling R doubles the current, which doubles the power.","The claim is correct — power is directly proportional to resistance when voltage is constant.","The claim is incorrect — power is unaffected by resistance changes when voltage is constant.","The claim is incorrect — since P = V²/R, doubling R at constant voltage actually halves the power."],answer:3},
-  {situation:"Three metal rods — X, Y, and Z — are placed in a room. Rod X is placed in contact with Rod Z until no further temperature change is observed. Rod Y is then placed in contact with Rod Z and the same result occurs.",q:"Statement 1: No net heat will flow between Rod X and Rod Y because, by the Zeroth Law, they are guaranteed to already be at the same temperature. Statement 2: At the moment Rod X and Rod Z stopped changing temperature, all microscopic particle motion between them also completely stopped.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:0},
-  {situation:"A thermometer reads 72°C in a bowl of arroz caldo and 72°C in a cup of ginger tea. A student concludes they are in thermal equilibrium and that heat will flow from the soup into the tea because the soup has greater mass.",q:"Statement 1: The student's conclusion that the arroz caldo and the ginger tea are in thermal equilibrium with each other is correct. Statement 2: The student's reasoning that heat will flow from the arroz caldo into the tea because the soup has more mass is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:0},
-  {situation:"A gas inside a sealed, rigid container absorbs 500 J of heat from a flame. A student claims the internal energy increased by 500 J and that the gas did 500 J of work on its surroundings.",q:"Statement 1: The claim that the internal energy of the gas increased by 500 J is correct. Statement 2: The claim that the gas did 500 J of work on its surroundings is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:0},
-  {situation:"A piston-cylinder device contains gas at constant pressure of 200 kPa. The gas expands from 2.0 L to 6.0 L after absorbing 1,500 J of heat. A student calculates work = 400 J and ΔU = 1,100 J.",q:"Statement 1: The student's calculated work of 400 J is correct. Statement 2: The student's calculated change in internal energy of 1,100 J is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:3},
-  {situation:"Wall A is concrete (k = 0.8 W/m·K) and Wall B is fiberglass (k = 0.04 W/m·K). Both have area = 20 m², thickness = 0.10 m, ΔT = 20 K. The engineer calculates Wall A conducts heat at 3,200 W and recommends Wall B as better insulator.",q:"Statement 1: The engineer's calculated heat flow rate of 3,200 W for Wall A is correct. Statement 2: The engineer's recommendation of Wall B as the better thermal insulator is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:2},
-  {situation:"A copper rod (k = 400 W/m·K), area = 0.002 m², length = 0.5 m, ΔT = 80 K. A student calculates heat flow = 64 W and claims doubling the length doubles the heat flow to 128 W.",q:"Statement 1: The student's calculated heat flow rate of 64 W is correct. Statement 2: The student's claim that doubling the length would double the heat flow rate to 128 W is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:3},
-  {situation:"A proposed heat engine operates between 600 K and 300 K. It absorbs 1,000 J, produces 800 J of work, and rejects 200 J per cycle. A student concludes the engine does not violate the First Law but does violate the Second Law.",q:"Statement 1: The student's conclusion that the engine does not violate the First Law is correct. Statement 2: The student's conclusion that the engine violates the Second Law is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:2},
-  {situation:"A refrigeration unit at a fish port in General Santos City removes 600 J from the cold compartment and requires 200 J of electrical work per cycle. A technician states heat rejected = 800 J and COP = 4.0.",q:"Statement 1: The technician's claim that the heat rejected to the warm environment is 800 J per cycle is correct. Statement 2: The technician's claim that the COP of the refrigerator is 4.0 is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:0},
-  {situation:"Two charged spheres are held 0.10 m apart. Sphere A: +4.0 μC, Sphere B: −4.0 μC. A student claims the force is attractive and that doubling the distance reduces the force to one-half.",q:"Statement 1: The student's claim that the force between the spheres is attractive is correct. Statement 2: The student's claim that doubling the distance reduces the force to one-half of its original value is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:0},
-  {situation:"A point charge of +6.0 μC is fixed in space. Point P is 0.30 m away; Point Q is 0.15 m away. Student claims potential at Q is four times greater than at P because distance was halved.",q:"Statement 1: The student's observation that the electric potential at Point P is positive is correct. Statement 2: The student's claim that the potential at Point Q is four times greater than at Point P is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:0},
-  {situation:"Resistor P (10 Ω) and Resistor Q (40 Ω) are individually connected to the same 20 V supply. Technician claims P draws 4× more current than Q, and Q dissipates more power than P.",q:"Statement 1: The technician's claim that Resistor P draws a current four times greater than Resistor Q is correct. Statement 2: The technician's claim that Resistor Q dissipates more power than Resistor P is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:0},
-  {situation:"A nichrome wire has resistance 8 Ω. A student simultaneously doubles both the length and the cross-sectional area while keeping the same material. Student claims resistance remains 8 Ω and that resistivity also changed.",q:"Statement 1: The student's claim that the resistance remains 8 Ω is correct. Statement 2: The student's claim that the resistivity of the nichrome changed is correct.",choices:["Statement 1 is correct","Statement 2 is correct","Both statements are correct","Both statements are incorrect"],answer:0},
-  {situation:"A 0.30 kg aluminum block (c = 900 J/kg·K) heated to 120°C is dropped into 0.80 kg of water (c = 4,186 J/kg·K) at 25°C inside a well-insulated container in Surigao City.",q:"Which expression correctly represents the heat lost by the aluminum block in terms of the unknown final temperature T?",choices:["Q = (0.30)(900)(T − 120)","Q = (0.80)(4,186)(120 − T)","Q = (0.30)(900)(120 − T)","Q = (0.30)(900)(120 + T)"],answer:2},
-  {situation:"A 0.30 kg aluminum block (c = 900 J/kg·K) heated to 120°C is dropped into 0.80 kg of water (c = 4,186 J/kg·K) at 25°C inside a well-insulated container in Surigao City.",q:"What is the final equilibrium temperature of the mixture?",choices:["27.8°C","32.1°C","35.2°C","42.0°C"],answer:1},
-  {situation:"A 0.30 kg aluminum block (c = 900 J/kg·K) heated to 120°C is dropped into 0.80 kg of water (c = 4,186 J/kg·K) at 25°C inside a well-insulated container in Surigao City.",q:"If the aluminum block were replaced with a copper block (c = 385 J/kg·K) of the same mass and initial temperature of 120°C, what would be the new final equilibrium temperature?",choices:["32.1°C, the same as aluminum since both start at 120°C","35.6°C, higher because copper is denser and stores more energy","28.2°C, lower because copper has a smaller specific heat and transfers less heat to the water","42.0°C, higher because copper conducts heat faster than aluminum"],answer:2},
-  {situation:"A gas inside a piston-cylinder device absorbs 2,500 J of heat from a burner. The gas expands at a constant pressure of 250 kPa, with the volume increasing from 3.0 L to 7.0 L.",q:"What is the work done by the gas during this isobaric expansion?",choices:["250 J","750 J","1,750 J","1,000 J"],answer:3},
-  {situation:"A gas inside a piston-cylinder device absorbs 2,500 J of heat from a burner. The gas expands at a constant pressure of 250 kPa, with the volume increasing from 3.0 L to 7.0 L.",q:"What is the change in internal energy of the gas?",choices:["2,500 J","3,500 J","1,000 J","1,500 J"],answer:3},
-  {situation:"A gas inside a piston-cylinder device absorbs 2,500 J of heat from a burner. The gas expands at a constant pressure of 250 kPa, with the volume increasing from 3.0 L to 7.0 L.",q:"If the same 2,500 J of heat were instead added under isochoric conditions, what would the change in internal energy of the gas be?",choices:["1,500 J, the same as the isobaric case","0 J because the volume does not change","3,500 J because pressure increases in place of volume","2,500 J because no work is done by the gas"],answer:3},
-  {situation:"A cold-storage warehouse roof in Bukidnon is made of fiberglass insulation (k = 0.04 W/m·K), area = 120 m², thickness = 0.08 m, ΔT = 30°C.",q:"What is the rate of heat gain through the roof under these conditions?",choices:["600 W","900 W","1,800 W","3,600 W"],answer:2},
-  {situation:"A cold-storage warehouse roof in Bukidnon is made of fiberglass insulation (k = 0.04 W/m·K), area = 120 m², original thickness = 0.08 m, ΔT = 30°C.",q:"If the thickness of the insulation is doubled to 0.16 m, what is the new rate of heat gain?",choices:["3,600 W","1,800 W","450 W","900 W"],answer:3},
-  {situation:"A cold-storage warehouse roof in Bukidnon, area = 120 m², thickness = 0.08 m, ΔT = 30°C. A different insulation material with k = 0.02 W/m·K is used.",q:"What is the new rate of heat gain?",choices:["1,800 W","450 W","300 W","900 W"],answer:3},
-  {situation:"A thermal power plant in Mindanao operates a heat engine between a boiler at 750 K and a cooling river at 300 K. The engine absorbs 5,000 J of heat per cycle from the hot reservoir.",q:"What is the maximum possible (Carnot) efficiency of this engine?",choices:["40%","75%","60%","50%"],answer:2},
-  {situation:"A thermal power plant in Mindanao operates a heat engine between a boiler at 750 K and a cooling river at 300 K. The engine absorbs 5,000 J of heat per cycle from the hot reservoir.",q:"Using the Carnot efficiency, what is the maximum work output and the heat rejected to the cold reservoir per cycle?",choices:["W = 2,000 J; Qcold = 3,000 J","W = 3,000 J; Qcold = 2,000 J","W = 2,500 J; Qcold = 2,500 J","W = 4,000 J; Qcold = 1,000 J"],answer:1},
-  {situation:"A thermal power plant in Mindanao operates a heat engine between a boiler at 750 K and a cooling river at 300 K. The engine absorbs 5,000 J per cycle but in actual operation produces only 1,800 J of useful work per cycle.",q:"What is the actual efficiency and the total entropy change of the universe per cycle?",choices:["Actual η = 36%; ΔSuniverse = +4.00 J/K","Actual η = 40%; ΔSuniverse = +3.07 J/K","Actual η = 36%; ΔSuniverse = +5.27 J/K","Actual η = 60%; ΔSuniverse = 0.00 J/K"],answer:0},
-  {situation:"Two charged spheres are held in air at Surigao Education Center. Sphere A: +5.0 μC, Sphere B: −3.0 μC, separated by 0.15 m. Use k = 8.99 × 10⁹ N·m²/C².",q:"What is the magnitude of the electrostatic force between the two spheres?",choices:["3.0 N","6.0 N","9.0 N","12.0 N"],answer:1},
-  {situation:"Two charged spheres are held in air at Surigao Education Center. Sphere A: +5.0 μC, Sphere B: −3.0 μC, separated by 0.15 m. Use k = 8.99 × 10⁹ N·m²/C².",q:"Sphere A loses half its original charge to a neutral conductor and is then returned to its original position 0.15 m from Sphere B. What is the new electrostatic force between them?",choices:["3.0 N","4.5 N","1.5 N","6.0 N"],answer:0},
-  {situation:"Two charged spheres are held in air at Surigao Education Center. Sphere A: +5.0 μC, Sphere B: −3.0 μC, separated by 0.15 m. Use k = 8.99 × 10⁹ N·m²/C².",q:"What is the electric potential at the midpoint between the two original spheres before any charge change? (The midpoint is 0.075 m from each sphere.)",choices:["-2.4 × 10⁵ V","+3.6 × 10⁵ V","0 V","+2.4 × 10⁵ V"],answer:3},
-  {situation:"An electrical technician in Cagayan de Oro is troubleshooting a series circuit. A 36 V battery is connected in series to a wire with resistance 2 Ω and a resistive load of 16 Ω.",q:"What is the total resistance of the circuit and the current flowing through it?",choices:["Rtotal = 14 Ω; I = 2.57 A","Rtotal = 16 Ω; I = 2.25 A","Rtotal = 18 Ω; I = 2.0 A","Rtotal = 32 Ω; I = 1.13 A"],answer:2},
-  {situation:"An electrical technician in Cagayan de Oro is troubleshooting a series circuit. A 36 V battery is connected in series to a wire with resistance 2 Ω and a resistive load of 16 Ω.",q:"What are the voltage drops across the wire and across the load respectively?",choices:["Vwire = 4 V; Vload = 32 V","Vwire = 6 V; Vload = 30 V","Vwire = 2 V; Vload = 34 V","Vwire = 8 V; Vload = 28 V"],answer:0},
-  {situation:"An electrical technician in Cagayan de Oro is troubleshooting a series circuit. A 36 V battery is connected in series to a wire with resistance 2 Ω and a resistive load of 16 Ω.",q:"What percentage of the total power delivered by the battery is wasted in the wire?",choices:["16.7%","11.1%","22.2%","5.6%"],answer:1},
-],
-
-}; // end EXAM_DATA
-
+window.onload = refreshStatuses;
 </script>
 </body>
 </html>
