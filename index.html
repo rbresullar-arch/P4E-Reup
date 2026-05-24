@@ -7,7 +7,40 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{\n  --bg:#ffffff;--bg2:#f7f7f5;--border:#e0e0da;\n  --text:#1a1a1a;--dim:#777770;--accent:#1a1a1a;\n  --good:#2d6a2d;--warn:#b07800;--bad:#b02020;\n  --line:1px solid var(--border);\n}\n*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}\nhtml,body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;min-height:100vh;overflow-x:hidden;}\nbody{padding:clamp(16px,4vw,40px);display:flex;flex-direction:column;align-items:center;}\n.container{width:100%;max-width:640px;display:none;}\n.active{display:block;}\nh1,h2,h3{font-family:'Fraunces',serif;font-weight:600;color:var(--text);}\n.hub-header{margin-bottom:32px;border-bottom:var(--line);padding-bottom:16px;width:100%;}\n.hub-header h1{font-size:32px;margin-bottom:4px;}\n.student-bar{display:flex;gap:12px;align-items:center;margin-top:12px;font-size:13px;}\ninput[type=\"text\"]{background:var(--bg2);border:var(--line);padding:8px 12px;font-family:inherit;font-size:14px;color:var(--text);outline:none;width:100%;max-width:240px;}\nbutton{background:var(--accent);color:#fff;border:none;padding:8px 16px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity 0.2s;}\nbutton:hover{opacity:0.8;}\n.btn-secondary{background:transparent;color:var(--text);border:var(--line);}\n.grid{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:32px;}\n@media(min-width:480px){.grid{grid-template-columns:1fr 1fr;}}\n.card{background:var(--bg2);border:var(--line);padding:20px;display:flex;flex-direction:column;justify-content:between;position:relative;}\n.card h3{font-size:18px;margin-bottom:8px;}\n.card .desc{font-size:12px;color:var(--dim);margin-bottom:20px;line-height:1.5;}\n.card .meta{font-size:11px;margin-top:auto;color:var(--text);border-top:1px dashed var(--border);padding-top:12px;display:flex;justify-content:space-between;}\n.badge-done{color:var(--good);font-weight:700;}\n.badge-none{color:var(--dim);}\n.modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;padding:20px;z-index:100;}\n.modal{background:var(--bg);border:var(--line);width:100%;max-width:540px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,0.05);}\n.modal h2{font-size:22px;margin-bottom:12px;}\ntextarea{width:100%;height:180px;background:var(--bg2);border:var(--line);font-family:inherit;font-size:11px;padding:12px;resize:none;outline:none;color:var(--text);margin-bottom:16px;}\n.modal-btns{display:flex;gap:12px;justify-content:end;}\n.footer-tools{margin-top:40px;padding-top:16px;border-top:var(--line);display:flex;gap:12px;width:100%;}\n</style>
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;--border:#e0e0da;
+  --text:#1a1a1a;--dim:#777770;--accent:#1a1a1a;
+  --good:#2d6a2d;--warn:#b07800;--bad:#b02020;
+  --line:1px solid var(--border);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;min-height:100vh;overflow-x:hidden;}
+body{padding:clamp(16px,4vw,40px);display:flex;flex-direction:column;align-items:center;}
+.container{width:100%;max-width:640px;display:none;}
+.container.active{display:block;}
+h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;color:var(--text);}
+.hub-header{margin-bottom:32px;border-bottom:var(--line);padding-bottom:16px;width:100%;}
+.hub-header h1{font-size:32px;margin-bottom:4px;}
+.student-bar{display:flex;gap:12px;align-items:center;margin-top:12px;font-size:13px;}
+input[type="text"]{background:var(--bg2);border:var(--line);padding:8px 12px;font-family:inherit;font-size:14px;color:var(--text);outline:none;width:100%;max-width:240px;}
+button{background:var(--accent);color:#fff;border:none;padding:8px 16px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity 0.2s;}
+button:hover{opacity:0.8;}
+.btn-secondary{background:transparent;color:var(--text);border:var(--line);}
+.grid{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:32px;}
+@media(min-width:480px){.grid{grid-template-columns:1fr 1fr;}}
+.card{background:var(--bg2);border:var(--line);padding:20px;display:flex;flex-direction:column;justify-content:between;position:relative;}
+.card h3{font-size:18px;margin-bottom:8px;}
+.card .desc{font-size:12px;color:var(--dim);margin-bottom:20px;line-height:1.5;}
+.card .meta{font-size:11px;margin-top:auto;color:var(--text);border-top:1px dashed var(--border);padding-top:12px;display:flex;justify-content:space-between;}
+.badge-done{color:var(--good);font-weight:700;}
+.badge-none{color:var(--dim);}
+.modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;padding:20px;z-index:100;}
+.modal{background:var(--bg);border:var(--line);width:100%;max-width:540px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,0.05);}
+.modal h2{font-size:22px;margin-bottom:12px;}
+textarea{width:100%;height:180px;background:var(--bg2);border:var(--line);font-family:inherit;font-size:11px;padding:12px;resize:none;outline:none;color:var(--text);margin-bottom:16px;}
+.modal-btns{display:flex;gap:12px;justify-content:end;}
+.footer-tools{margin-top:40px;padding-top:16px;border-top:var(--line);display:flex;gap:12px;width:100%;}
+</style>
 </head>
 <body>
 
@@ -15,7 +48,6 @@
   <div class="hub-header">
     <h1>PHYS 111 Hub</h1>
     <p style="color:var(--dim); font-size:13px;">Physics for Engineers · Evaluation Workspaces</p>
-    
     <div class="student-bar">
       <span>Student Name:</span>
       <input type="text" id="student-name-input" placeholder="Enter Full Name" onchange="saveName()">
@@ -31,7 +63,6 @@
         <button onclick="launchActivity('quiz', 'electrostatics')">Launch</button>
       </div>
     </div>
-
     <div class="card">
       <h3>Quiz Module 2</h3>
       <p class="desc">DC Circuits, Resistance, Ohm's Law, and Network Telemetry Analysis.</p>
@@ -52,7 +83,7 @@
   <div class="modal" onclick="event.stopPropagation()">
     <h2>Encrypted Progress Report</h2>
     <p style="font-size:12px; color:var(--dim); margin-bottom:12px;">
-      Copy the single text block sequence code below and paste it inside the Python Decoder program.
+      Copy the text block code below and paste it inside the Tkinter Python Decoder GUI viewer.
     </p>
     <textarea id="summary-text" readonly></textarea>
     <div class="modal-btns">
@@ -85,7 +116,7 @@ function xorDecrypt(encoded) {
 }
 
 function saveName() {
-  const name = document.getElementById('student-name-input').value.strip || document.getElementById('student-name-input').value;
+  const name = document.getElementById('student-name-input').value;
   localStorage.setItem('p4e_name', name);
   refreshStatuses();
 }
@@ -93,8 +124,6 @@ function saveName() {
 function refreshStatuses() {
   const name = localStorage.getItem('p4e_name') || '';
   document.getElementById('student-name-input').value = name;
-
-  // Check LocalStorage keys for current user logs
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
     if (k.includes('electrostatics')) {
@@ -111,7 +140,7 @@ function refreshStatuses() {
 function launchActivity(type, topic) {
   const name = localStorage.getItem('p4e_name');
   if(!name || name.trim() === "") {
-    alert("Please enter your name context identity before starting a module evaluation slot.");
+    alert("Please enter your identity name context before starting evaluation modules.");
     return;
   }
   window.location.href = `quiz.html?type=${type}&topic=${topic}`;
@@ -122,7 +151,7 @@ function hideModal(id) { document.getElementById(id).style.display = 'none'; }
 function closeModal(e) { e.currentTarget.style.display = 'none'; }
 
 function clearLocalCache() {
-  if (confirm("Are you sure you want to completely clear browser progress attempts stored locally?")) {
+  if (confirm("Clear local evaluations cache data history?")) {
     localStorage.clear();
     window.location.reload();
   }
@@ -132,12 +161,9 @@ function copySummaryText() {
   const area = document.getElementById('summary-text');
   area.select();
   document.execCommand('copy');
-  alert("Encrypted data scorecard payload saved to clipboard!");
+  alert("Encrypted data report payload copied to clipboard!");
 }
 
-// ────────────────────────────────────────────────────────
-//  SIMPLIFIED PLAIN-TEXT MATRIX COMPILATION ENGINE
-// ────────────────────────────────────────────────────────
 function openSummary() {
   const keys = [];
   for (let i = 0; i < localStorage.length; i++) {
@@ -147,7 +173,6 @@ function openSummary() {
 
   const studentName = localStorage.getItem('p4e_name') || 'Anonymous Student';
   
-  // 1. Build clear text human-readable row records
   let reportText = "==================================================\n";
   reportText += `       PHYS 111 STUDENT PROGRESS SUMMARY REPORT\n`;
   reportText += "==================================================\n";
@@ -156,17 +181,14 @@ function openSummary() {
   reportText += "--------------------------------------------------\n\n";
 
   let validItems = 0;
-
   keys.forEach(k => {
     if (k === 'p4e_name') return;
-    
     const plaintextValue = xorDecrypt(localStorage.getItem(k));
     if (!plaintextValue) return;
 
     try {
       const obj = JSON.parse(plaintextValue);
       validItems++;
-
       let cleanActivity = k.replace('p4e_', '').replace(/_/g, ' ');
       cleanActivity = cleanActivity.replace(/\b\w/g, c => c.toUpperCase());
 
@@ -181,7 +203,6 @@ function openSummary() {
       if (obj.mode && obj.mode !== 'complete') flags.push(`mode=${obj.mode}`);
       const flagLog = flags.length > 0 ? flags.join('; ') : '';
 
-      // Direct clean text properties pattern used by the Python SQLite consumer regex match tracker
       reportText += `[ENTRY_KEY]: ${k}\n`;
       reportText += `  Score    : ${score}/${total}\n`;
       reportText += `  Date     : ${dtString}\n`;
@@ -189,18 +210,15 @@ function openSummary() {
       reportText += `  Flags    : ${flagLog}\n`;
       reportText += "--------------------------------------------------\n";
     } catch (e) {
-      reportText += `[ENTRY_KEY]: ${k}\n  Error reading format schema metrics.\n--------------------------------------------------\n`;
+      reportText += `[ENTRY_KEY]: ${k}\n  Error reading metadata metrics.\n--------------------------------------------------\n`;
     }
   });
 
   if (validItems === 0) {
-    reportText += "No active performance history record logs exist inside browser database properties.\n--------------------------------------------------\n";
+    reportText += "No active performance records discovered in local web properties storage configurations.\n--------------------------------------------------\n";
   }
 
-  // 2. Encrypt the structured explicit text layout block 
   const encryptedPayloadBlock = xorEncrypt(reportText);
-
-  // 3. Populate modal UI element properties view
   document.getElementById('summary-text').value = encryptedPayloadBlock;
   showModal('summary-modal');
 }
