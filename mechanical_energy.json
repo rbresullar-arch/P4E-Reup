@@ -1,0 +1,44 @@
+{
+  "title": "Mechanical Energy",
+  "questions": [
+    {
+      "template": "What is the kinetic energy of a {m} kg object moving at {v} m/s?",
+      "variables": {
+        "m": [2, 5, 10],
+        "v": [4, 6, 8]
+      },
+      "formula": "0.5 * m * v * v",
+      "answerType": "decimal",
+      "unit": "J"
+    },
+    {
+      "template": "What is the gravitational potential energy of a {m} kg object at height {h} m? (Use g = 9.8 m/s²)",
+      "variables": {
+        "m": [3, 5, 8],
+        "h": [2, 4, 5]
+      },
+      "formula": "m * 9.8 * h",
+      "answerType": "decimal",
+      "unit": "J"
+    },
+    {
+      "template": "An object is dropped from rest at a height of {h} m. What is its speed just before hitting the ground? (Use g = 9.8 m/s²)",
+      "variables": {
+        "h": [5, 20, 45]
+      },
+      "formula": "Math.sqrt(2 * 9.8 * h)",
+      "answerType": "decimal",
+      "unit": "m/s"
+    },
+    {
+      "template": "A {m} kg object is moving at {v} m/s. What height could it reach if all its kinetic energy converts to gravitational potential energy? (Use g = 9.8 m/s²)",
+      "variables": {
+        "m": [2, 5, 10],
+        "v": [10, 14, 20]
+      },
+      "formula": "v * v / (2 * 9.8)",
+      "answerType": "decimal",
+      "unit": "m"
+    }
+  ]
+}

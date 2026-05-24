@@ -1,0 +1,47 @@
+{
+  "title": "Centripetal Force/Acceleration",
+  "questions": [
+    {
+      "template": "What is the centripetal acceleration of an object moving at {v} m/s in a circle of radius {r} m?",
+      "variables": {
+        "v": [10, 20, 5],
+        "r": [5, 10, 2]
+      },
+      "formula": "v * v / r",
+      "answerType": "decimal",
+      "unit": "m/s²"
+    },
+    {
+      "template": "A {m} kg object moves in a circle of radius {r} m at {v} m/s. What is the centripetal force?",
+      "variables": {
+        "m": [2, 5, 10],
+        "r": [4, 2, 5],
+        "v": [4, 6, 10]
+      },
+      "formula": "m * v * v / r",
+      "answerType": "decimal",
+      "unit": "N"
+    },
+    {
+      "template": "A car of mass {m} kg travels around a curve of radius {r} m at {v} m/s. What is the centripetal force?",
+      "variables": {
+        "m": [800, 1000, 1500],
+        "r": [50, 100, 75],
+        "v": [10, 20, 15]
+      },
+      "formula": "m * v * v / r",
+      "answerType": "decimal",
+      "unit": "N"
+    },
+    {
+      "template": "A satellite moves in a circular orbit with period {T} seconds and radius {r} m. What is its centripetal acceleration?",
+      "variables": {
+        "T": [60, 120, 30],
+        "r": [100, 500, 200]
+      },
+      "formula": "4 * Math.PI * Math.PI * r / (T * T)",
+      "answerType": "decimal",
+      "unit": "m/s²"
+    }
+  ]
+}

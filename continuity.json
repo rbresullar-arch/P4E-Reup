@@ -1,0 +1,49 @@
+{
+  "title": "Continuity Equation",
+  "questions": [
+    {
+      "template": "Water flows through a pipe of area {a1} m² at {v1} m/s, then enters a section of area {a2} m². What is the speed in the second section?",
+      "variables": {
+        "a1": [0.1, 0.2, 0.05],
+        "v1": [4, 6, 10],
+        "a2": [0.05, 0.04, 0.01]
+      },
+      "formula": "a1 * v1 / a2",
+      "answerType": "decimal",
+      "unit": "m/s"
+    },
+    {
+      "template": "A pipe narrows from radius {r1} m to {r2} m. If water enters at {v1} m/s, what speed does it exit?",
+      "variables": {
+        "r1": [0.1, 0.2, 0.5],
+        "r2": [0.05, 0.1, 0.25],
+        "v1": [2, 3, 4]
+      },
+      "formula": "v1 * r1 * r1 / (r2 * r2)",
+      "answerType": "decimal",
+      "unit": "m/s"
+    },
+    {
+      "template": "Water enters a hose at {v1} m/s through area {a1} cm² and exits at {v2} m/s. What is the exit area?",
+      "variables": {
+        "v1": [2, 5, 1],
+        "a1": [10, 20, 50],
+        "v2": [4, 10, 5]
+      },
+      "formula": "a1 * v1 / v2",
+      "answerType": "decimal",
+      "unit": "cm²"
+    },
+    {
+      "template": "A river of cross-section {a1} m² flows at {v1} m/s. It narrows to area {a2} m². What is the new flow speed?",
+      "variables": {
+        "a1": [50, 100, 200],
+        "v1": [1, 2, 0.5],
+        "a2": [10, 20, 50]
+      },
+      "formula": "a1 * v1 / a2",
+      "answerType": "decimal",
+      "unit": "m/s"
+    }
+  ]
+}

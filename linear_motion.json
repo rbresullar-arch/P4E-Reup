@@ -1,0 +1,45 @@
+{
+  "title": "Linear Motion",
+  "questions": [
+    {
+      "template": "A car accelerates from rest at {a} m/s² for {t} seconds. What is its final velocity?",
+      "variables": {
+        "a": [2, 3, 5],
+        "t": [4, 6, 10]
+      },
+      "formula": "a * t",
+      "answerType": "decimal",
+      "unit": "m/s"
+    },
+    {
+      "template": "An object starts at {v0} m/s and decelerates at {a} m/s². How far does it travel before stopping?",
+      "variables": {
+        "v0": [10, 20, 30],
+        "a": [2, 5, 4]
+      },
+      "formula": "(v0 * v0) / (2 * a)",
+      "answerType": "decimal",
+      "unit": "m"
+    },
+    {
+      "template": "A ball is dropped from rest. After {t} seconds, what is its velocity? (Use g = 9.8 m/s²)",
+      "variables": {
+        "t": [2, 3, 5]
+      },
+      "formula": "9.8 * t",
+      "answerType": "decimal",
+      "unit": "m/s"
+    },
+    {
+      "template": "A car traveling at {v0} m/s accelerates at {a} m/s² for {t} seconds. What is the distance traveled?",
+      "variables": {
+        "v0": [10, 15, 20],
+        "a": [2, 3, 4],
+        "t": [5, 4, 6]
+      },
+      "formula": "v0 * t + 0.5 * a * t * t",
+      "answerType": "decimal",
+      "unit": "m"
+    }
+  ]
+}

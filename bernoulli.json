@@ -1,0 +1,48 @@
+{
+  "title": "Bernoulli's Principle",
+  "questions": [
+    {
+      "template": "Water flows horizontally through a pipe at {v1} m/s with pressure {p1} Pa. At a section where the speed is {v2} m/s, what is the pressure? (ρ = 1000 kg/m³)",
+      "variables": {
+        "v1": [2, 4, 5],
+        "p1": [200000, 150000, 100000],
+        "v2": [6, 8, 10]
+      },
+      "formula": "p1 + 0.5 * 1000 * (v1 * v1 - v2 * v2)",
+      "answerType": "decimal",
+      "unit": "Pa"
+    },
+    {
+      "template": "A tank has a small hole at depth {h} m below the water surface. What is the speed of water exiting the hole? (Torricelli's theorem, g = 9.8 m/s²)",
+      "variables": {
+        "h": [5, 10, 20]
+      },
+      "formula": "Math.sqrt(2 * 9.8 * h)",
+      "answerType": "decimal",
+      "unit": "m/s"
+    },
+    {
+      "template": "Water enters a horizontal pipe at {v1} m/s with pressure {p1} Pa, and exits at {v2} m/s. What is the exit pressure? (ρ = 1000 kg/m³)",
+      "variables": {
+        "v1": [3, 2, 5],
+        "v2": [6, 8, 10],
+        "p1": [180000, 200000, 250000]
+      },
+      "formula": "p1 + 0.5 * 1000 * (v1 * v1 - v2 * v2)",
+      "answerType": "decimal",
+      "unit": "Pa"
+    },
+    {
+      "template": "A pipe rises a height of {h} m. Water enters at {v1} m/s and pressure {p1} Pa, and the speed at the top is {v2} m/s. What is the pressure at the top? (ρ = 1000 kg/m³, g = 9.8 m/s²)",
+      "variables": {
+        "h": [2, 5, 10],
+        "v1": [4, 3, 2],
+        "v2": [2, 1, 1],
+        "p1": [300000, 250000, 200000]
+      },
+      "formula": "p1 + 0.5 * 1000 * (v1 * v1 - v2 * v2) - 1000 * 9.8 * h",
+      "answerType": "decimal",
+      "unit": "Pa"
+    }
+  ]
+}

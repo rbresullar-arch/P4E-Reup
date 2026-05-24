@@ -1,0 +1,45 @@
+{
+  "title": "Flow Rate",
+  "questions": [
+    {
+      "template": "Water flows through a pipe of cross-sectional area {a} m² at speed {v} m/s. What is the volumetric flow rate?",
+      "variables": {
+        "a": [0.05, 0.1, 0.02],
+        "v": [2, 3, 5]
+      },
+      "formula": "a * v",
+      "answerType": "decimal",
+      "unit": "m³/s"
+    },
+    {
+      "template": "A pipe delivers {V} m³ of water in {t} seconds. What is the flow rate?",
+      "variables": {
+        "V": [10, 50, 100],
+        "t": [5, 20, 25]
+      },
+      "formula": "V / t",
+      "answerType": "decimal",
+      "unit": "m³/s"
+    },
+    {
+      "template": "Water flows through a circular pipe of radius {r} m at speed {v} m/s. What is the volumetric flow rate?",
+      "variables": {
+        "r": [0.05, 0.1, 0.2],
+        "v": [2, 1, 3]
+      },
+      "formula": "Math.PI * r * r * v",
+      "answerType": "decimal",
+      "unit": "m³/s"
+    },
+    {
+      "template": "A faucet fills a {V} L bucket in {t} seconds. What is the flow rate?",
+      "variables": {
+        "V": [10, 20, 50],
+        "t": [5, 10, 25]
+      },
+      "formula": "V / t",
+      "answerType": "decimal",
+      "unit": "L/s"
+    }
+  ]
+}

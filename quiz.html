@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PHYS 111 – Long Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;--border:#e0e0da;
+  --text:#1a1a1a;--dim:#777770;
+  --good:#2d6a2d;--warn:#b07800;--bad:#b02020;
+  --line:1px solid var(--border);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+body{padding:clamp(16px,4vw,40px);display:flex;flex-direction:column;align-items:center;}
+.container{width:100%;max-width:720px;}
+
+/* ── STATES ── */
+#view-block,#view-start,#view-quiz,#view-result{display:none;}
+
+/* ── BLOCK ── */
+#view-block{flex-direction:column;justify-content:center;align-items:center;min-height:100vh;text-align:center;gap:16px;}
+#view-block h1{font-family:'Fraunces',serif;font-size:clamp(24px,6vw,40px);}
+#view-block p{font-size:14px;color:var(--dim);max-width:400px;line-height:1.7;}
+
+/* ── START ── */
+#view-start{flex-direction:column;justify-content:center;min-height:100vh;gap:20px;}
+.label{font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;}
+.big{font-family:'Fraunces',serif;font-size:clamp(24px,6vw,40px);font-weight:700;line-height:1.2;}
+.meta-row{display:flex;gap:20px;flex-wrap:wrap;border-top:var(--line);padding-top:16px;}
+.meta-item .mk{font-size:11px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.meta-item .mv{font-size:15px;}
+.rules{background:var(--bg2);border-left:3px solid var(--border);padding:14px 18px;font-size:13px;line-height:1.8;color:var(--dim);}
+.rules strong{color:var(--text);display:block;margin-bottom:4px;}
+.btn{display:block;width:100%;background:var(--text);color:var(--bg);border:none;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;letter-spacing:.08em;padding:14px 24px;cursor:pointer;transition:opacity .15s;min-height:48px;}
+.btn:hover{opacity:.82;}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.btn.ghost{background:transparent;color:var(--text);border:var(--line);}
+
+/* ── QUIZ ── */
+#view-quiz{flex-direction:column;padding-top:16px;gap:0;}
+.quiz-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.quiz-top .qt-left{font-size:11px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;}
+.timer{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(22px,5vw,28px);transition:color .3s;}
+.timer.warn{color:var(--warn);}
+.timer.bad{color:var(--bad);animation:blink 1s infinite;}
+@keyframes blink{50%{opacity:.4;}}
+.tbar{height:3px;background:var(--border);margin-bottom:20px;}
+.tbar .fill{height:100%;background:var(--text);transition:width 1s linear,background .3s;}
+.tbar .fill.warn{background:var(--warn);}
+.tbar .fill.bad{background:var(--bad);}
+.flag-row{font-size:11px;color:var(--dim);display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+.flag-row .fw{color:var(--warn);}
+.q-num{font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-bottom:12px;}
+.q-text{font-family:'Fraunces',serif;font-size:clamp(17px,4vw,22px);line-height:1.55;margin-bottom:24px;}
+.q-text .v{background:rgba(26,26,26,.08);padding:1px 6px;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:.92em;}
+.input-wrap{display:flex;border:var(--line);overflow:hidden;margin-bottom:8px;}
+.input-wrap input{flex:1;border:none;background:transparent;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:18px;padding:13px 16px;outline:none;-webkit-appearance:none;}
+.input-wrap input:focus{background:var(--bg2);}
+.input-wrap .unit{background:var(--bg2);color:var(--dim);padding:13px 18px;font-size:13px;border-left:var(--line);display:flex;align-items:center;white-space:nowrap;}
+.fb{font-size:12px;min-height:14px;margin-top:6px;letter-spacing:.04em;}
+.fb.bad{color:var(--bad);}
+.submit-btn{margin-top:16px;}
+
+/* ── RESULT ── */
+#view-result{flex-direction:column;justify-content:center;min-height:100vh;gap:20px;}
+.score-big{font-family:'Fraunces',serif;font-size:clamp(56px,16vw,96px);font-weight:700;line-height:1;}
+.score-big .st{font-size:.45em;color:var(--dim);}
+.res-meta{font-size:13px;color:var(--dim);line-height:1.9;}
+.res-flags{font-size:12px;color:var(--warn);margin-top:4px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-row .btn{width:auto;flex:1;min-width:120px;}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="view-block" style="display:none;"></div>
+<div id="view-start" style="display:none;"></div>
+<div id="view-quiz" style="display:none;"></div>
+<div id="view-result" style="display:none;"></div>
+
+</div>
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════
+//  ENCRYPTION (must match index.html)
+// ═══════════════════════════════════════════
+const XOR_KEY = 'P4E@SEC2025';
+function xorEncrypt(str){let o='';for(let i=0;i<str.length;i++)o+=String.fromCharCode(str.charCodeAt(i)^XOR_KEY.charCodeAt(i%XOR_KEY.length));return btoa(unescape(encodeURIComponent(o)));}
+function xorDecrypt(b64){try{const s=decodeURIComponent(escape(atob(b64)));let o='';for(let i=0;i<s.length;i++)o+=String.fromCharCode(s.charCodeAt(i)^XOR_KEY.charCodeAt(i%XOR_KEY.length));return o;}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,xorEncrypt(JSON.stringify(v)));}catch(e){}}
+function lsGet(k){try{const r=localStorage.getItem(k);return r?JSON.parse(xorDecrypt(r)):null;}catch(e){return null;}}
+
+// ═══════════════════════════════════════════
+//  BROWSER CHECK
+// ═══════════════════════════════════════════
+function checkBrowser(){
+  const ua=navigator.userAgent;
+  const isApple=/iPad|iPhone|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+  if(isApple)return true;
+  return /Chrome/.test(ua)&&!/Edg|OPR|SamsungBrowser|CriOS/.test(ua);
+}
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+const QUIZ_TIME_PER_Q = 105;
+const FAST_THRESHOLD  = 5;
+
+let topicId=null, quizData=null, studentName='', slot=null, prefix='';
+let currentQ=0, score=0, answers=[];
+let currentVars=null, currentCorrect=null;
+let quizStartTime=0, qStartTime=0;
+let timeRemaining=0, timerInterval=null;
+let tabSwitches=0, fastAnswers=0;
+let quizActive=false;
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fmtDur(sec){sec=Math.max(0,Math.round(sec));return`${Math.floor(sec/60)}m ${sec%60<10?'0':''}${sec%60}s`;}
+function fmtDate(iso){try{const d=new Date(iso);return d.toLocaleDateString('en-PH',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return iso;}}
+function show(id){['block','start','quiz','result'].forEach(s=>{const el=document.getElementById('view-'+s);if(el)el.style.display=s===id?'flex':'none';});}
+
+function getSlot(pfx){for(const s of['s1','s2','s3']){if(!lsGet(`${pfx}_${s}`))return s;}return null;}
+
+function evalFormula(formula,vars){
+  const sind=d=>Math.sin(d*Math.PI/180);
+  const cosd=d=>Math.cos(d*Math.PI/180);
+  const tand=d=>Math.tan(d*Math.PI/180);
+  const names=Object.keys(vars);
+  const values=names.map(n=>vars[n]);
+  const fn=Function(...names,'sind','cosd','tand','return '+formula+';');
+  return fn(...values,sind,cosd,tand);
+}
+
+function pickVars(varsDef){
+  // Pick the set index based on slot (s1=0, s2=1, s3=2) for consistent set per student
+  const setIdx={'s1':0,'s2':1,'s3':2}[slot]||0;
+  const picked={};
+  Object.keys(varsDef).forEach(k=>{
+    const arr=varsDef[k];
+    picked[k]=arr[setIdx%arr.length];
+  });
+  return picked;
+}
+
+function renderTemplate(tpl,vars){
+  return tpl.replace(/\{(\w+)\}/g,(_,k)=>{
+    const v=vars[k];
+    return`<span class="v">${v}</span>`;
+  });
+}
+
+function checkAnswer(input,correct,type){
+  if(input===''||input===null)return false;
+  if(type==='integer'){const u=parseInt(input,10);if(isNaN(u))return false;return u===Math.round(correct);}
+  const u=parseFloat(input);if(isNaN(u))return false;
+  if(correct===0)return Math.abs(u)<0.01;
+  return Math.abs(u-correct)/Math.abs(correct)<=0.02;
+}
+
+// ═══════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  if(!checkBrowser()){
+    const ua=navigator.userAgent;
+    const isApple=/iPad|iPhone|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+    const req=isApple?'Safari or any browser':'Google Chrome';
+    document.getElementById('view-block').innerHTML=
+      `<h1>Wrong Browser</h1><p>This quiz must be opened in <strong>${req}</strong>. Please switch and try again.</p>`;
+    show('block');return;
+  }
+
+  const params=new URLSearchParams(window.location.search);
+  topicId=params.get('topic');
+  if(!topicId){document.getElementById('view-block').innerHTML='<h1>No topic</h1><p><a href="index.html">Return to hub</a></p>';show('block');return;}
+
+  studentName=lsGet('p4e_name')||'Student';
+  prefix=`p4e_quiz_${studentName}_${topicId}`;
+  slot=getSlot(prefix);
+
+  if(!slot){
+    // All 3 slots taken — show best score
+    let best=null;
+    for(const s of['s1','s2','s3']){const d=lsGet(`${prefix}_${s}`);if(d&&(best===null||d.score>best.score))best=d;}
+    document.getElementById('view-result').innerHTML=buildResultHTML(best,'All 3 sets completed.',true);
+    show('result');return;
+  }
+
+  fetch(`${topicId}.json`)
+    .then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .then(data=>{quizData=data;buildStart();})
+    .catch(()=>{document.getElementById('view-block').innerHTML=`<h1>Could not load topic</h1><p>Check that <code>${topicId}.json</code> is in the same folder as this page.</p>`;show('block');});
+});
+
+// ═══════════════════════════════════════════
+//  START SCREEN
+// ═══════════════════════════════════════════
+function buildStart(){
+  const slotsUsed=['s1','s2','s3'].filter(s=>lsGet(`${prefix}_${s}`)).length;
+  document.getElementById('view-start').innerHTML=`
+<div class="label">Physics for Engineers · Long Quiz</div>
+<div class="big">${esc(quizData.title)}</div>
+<div class="meta-row">
+  <div class="meta-item"><div class="mk">Student</div><div class="mv">${esc(studentName)}</div></div>
+  <div class="meta-item"><div class="mk">Items</div><div class="mv">${quizData.questions.length}</div></div>
+  <div class="meta-item"><div class="mk">Time / Item</div><div class="mv">1:45</div></div>
+  <div class="meta-item"><div class="mk">Set</div><div class="mv">${slot.toUpperCase()} of 3</div></div>
+  <div class="meta-item"><div class="mk">Sets Done</div><div class="mv">${slotsUsed} / 3</div></div>
+</div>
+<div class="rules">
+  <strong>Rules</strong>
+  · One attempt per set (3 sets available).<br>
+  · 105 seconds per question.<br>
+  · Numeric answers; 2% margin allowed.<br>
+  · Tab switching and fast answers are recorded.<br>
+  · Solve carefully — rushing is monitored.
+</div>
+<button class="btn" id="start-btn">Begin Set ${slot.toUpperCase()}</button>`;
+  document.getElementById('start-btn').addEventListener('click',startQuiz);
+  show('start');
+}
+
+// ═══════════════════════════════════════════
+//  QUIZ
+// ═══════════════════════════════════════════
+function startQuiz(){
+  currentQ=0;score=0;answers=[];tabSwitches=0;fastAnswers=0;
+  quizStartTime=Date.now();quizActive=true;
+  document.addEventListener('visibilitychange',onVis);
+  showQuestion();
+}
+
+function onVis(){if(!quizActive)return;if(document.hidden){tabSwitches++;updateFlags();}}
+function updateFlags(){
+  const ft=document.getElementById('fl-tabs');const ff=document.getElementById('fl-fast');
+  if(ft)ft.textContent=tabSwitches;if(ff)ff.textContent=fastAnswers;
+  if(ft)ft.className=tabSwitches>0?'fw':'';if(ff)ff.className=fastAnswers>0?'fw':'';
+}
+
+function showQuestion(){
+  if(currentQ>=quizData.questions.length){finishQuiz('complete');return;}
+  const q=quizData.questions[currentQ];
+  currentVars=pickVars(q.variables);
+  try{currentCorrect=evalFormula(q.formula,currentVars);}catch(e){currentCorrect=NaN;}
+  const unitHtml=q.unit?`<div class="unit">${esc(q.unit)}</div>`:'';
+  document.getElementById('view-quiz').innerHTML=`
+<div class="quiz-top">
+  <div class="qt-left">Q${currentQ+1} / ${quizData.questions.length} · ${esc(quizData.title)}</div>
+  <div class="timer" id="timer">1:45</div>
+</div>
+<div class="tbar"><div class="fill" id="tbar-fill"></div></div>
+<div class="flag-row">
+  <span>Tab switches: <span id="fl-tabs" class="${tabSwitches>0?'fw':''}">${tabSwitches}</span></span>
+  <span>Fast answers: <span id="fl-fast" class="${fastAnswers>0?'fw':''}">${fastAnswers}</span></span>
+</div>
+<div class="q-num">Question ${currentQ+1}</div>
+<div class="q-text">${renderTemplate(q.template,currentVars)}</div>
+<div class="input-wrap">
+  <input type="text" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" id="ans-input" placeholder="Your answer">
+  ${unitHtml}
+</div>
+<div class="fb" id="fb"></div>
+<button class="btn submit-btn" id="sub-btn">Submit</button>`;
+  const inp=document.getElementById('ans-input');
+  document.getElementById('sub-btn').addEventListener('click',submitAnswer);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')submitAnswer();});
+  setTimeout(()=>{if(inp)inp.focus();},100);
+  qStartTime=Date.now();
+  startTimer();
+  show('quiz');
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timeRemaining=QUIZ_TIME_PER_Q;
+  updateTimerUI();
+  timerInterval=setInterval(()=>{
+    timeRemaining--;
+    if(timeRemaining<=0){clearInterval(timerInterval);updateTimerUI();submitAnswer(true);}
+    else updateTimerUI();
+  },1000);
+}
+
+function updateTimerUI(){
+  const t=document.getElementById('timer');const f=document.getElementById('tbar-fill');
+  if(!t||!f)return;
+  const m=Math.floor(timeRemaining/60),s=timeRemaining%60;
+  t.textContent=`${m}:${s<10?'0'+s:s}`;
+  const pct=timeRemaining/QUIZ_TIME_PER_Q*100;
+  f.style.width=pct+'%';
+  const cls=timeRemaining<=40?'bad':timeRemaining<=70?'warn':'';
+  t.className='timer '+(cls);f.className='fill '+(cls);
+}
+
+function submitAnswer(timeUp){
+  if(!quizActive)return;
+  clearInterval(timerInterval);
+  const elapsed=(Date.now()-qStartTime)/1000;
+  const inp=document.getElementById('ans-input');
+  const val=inp?inp.value.trim():'';
+
+  // Fast answer flag (record only, no lockout)
+  if(!timeUp&&elapsed<=FAST_THRESHOLD&&val!==''){
+    fastAnswers++;
+    updateFlags();
+  }
+
+  const q=quizData.questions[currentQ];
+  const correct=val!==''&&checkAnswer(val,currentCorrect,q.answerType);
+  if(correct)score++;
+  answers.push({q:currentQ,val,correct,elapsed:Math.round(elapsed),timeUp:!!timeUp});
+  currentQ++;
+  showQuestion();
+}
+
+// ═══════════════════════════════════════════
+//  FINISH
+// ═══════════════════════════════════════════
+function finishQuiz(mode){
+  quizActive=false;clearInterval(timerInterval);
+  document.removeEventListener('visibilitychange',onVis);
+  const dur=Math.round((Date.now()-quizStartTime)/1000);
+  const startISO=new Date(quizStartTime).toISOString();
+  const record={
+    score,total:quizData.questions.length,set:slot,
+    dateTime:startISO,duration:dur,
+    tabSwitches,fastAnswers,mode,answers,
+  };
+  lsSet(`${prefix}_${slot}`,record);
+  document.getElementById('view-result').innerHTML=buildResultHTML(record,'',false);
+  show('result');
+}
+
+function buildResultHTML(record,extra,allDone){
+  const pct=Math.round(record.score/record.total*100);
+  const flags=[];
+  if(record.tabSwitches>0)flags.push(`⚑ Tab switches: ${record.tabSwitches}`);
+  if(record.fastAnswers>0)flags.push(`⚑ Fast answers: ${record.fastAnswers}`);
+  return`
+<div class="label">Result · ${allDone?'All Sets Done':'Set '+record.set.toUpperCase()}</div>
+<div class="score-big">${record.score}<span class="st">/${record.total}</span></div>
+<div class="res-meta">
+  ${pct}% &nbsp;·&nbsp; ${fmtDur(record.duration)}<br>
+  Taken: ${fmtDate(record.dateTime)}<br>
+  ${extra}
+</div>
+${flags.length?`<div class="res-flags">${flags.join('  ')}</div>`:''}
+<div class="btn-row">
+  <a href="index.html" class="btn ghost" style="text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">← Hub</a>
+  ${!allDone&&getSlot(prefix)?`<button class="btn" onclick="location.reload()">Take Next Set</button>`:''}
+</div>`;
+}
+</script>
+</body>
+</html>

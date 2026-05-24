@@ -1,0 +1,45 @@
+{
+  "title": "Projectile Motion",
+  "questions": [
+    {
+      "template": "A projectile is launched from ground level at {v} m/s at {theta} degrees. What is its time of flight? (Use g = 9.8 m/s²)",
+      "variables": {
+        "v": [20, 30, 50],
+        "theta": [30, 45, 60]
+      },
+      "formula": "2 * v * sind(theta) / 9.8",
+      "answerType": "decimal",
+      "unit": "s"
+    },
+    {
+      "template": "A projectile is launched from ground level at {v} m/s at {theta} degrees. What is its maximum height? (Use g = 9.8 m/s²)",
+      "variables": {
+        "v": [20, 40, 30],
+        "theta": [30, 45, 60]
+      },
+      "formula": "Math.pow(v * sind(theta), 2) / (2 * 9.8)",
+      "answerType": "decimal",
+      "unit": "m"
+    },
+    {
+      "template": "A projectile is fired from ground level at {v} m/s at {theta} degrees. What is its horizontal range? (Use g = 9.8 m/s²)",
+      "variables": {
+        "v": [25, 40, 20],
+        "theta": [30, 45, 60]
+      },
+      "formula": "v * v * sind(2 * theta) / 9.8",
+      "answerType": "decimal",
+      "unit": "m"
+    },
+    {
+      "template": "A ball is thrown horizontally at {v} m/s from a height of {h} m. How far from the base does it land? (Use g = 9.8 m/s²)",
+      "variables": {
+        "v": [10, 15, 20],
+        "h": [20, 45, 80]
+      },
+      "formula": "v * Math.sqrt(2 * h / 9.8)",
+      "answerType": "decimal",
+      "unit": "m"
+    }
+  ]
+}

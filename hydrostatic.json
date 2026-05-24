@@ -1,0 +1,43 @@
+{
+  "title": "Hydrostatic Pressure",
+  "questions": [
+    {
+      "template": "What is the gauge hydrostatic pressure at {h} m below the water surface? (ρ = 1000 kg/m³, g = 9.8 m/s²)",
+      "variables": {
+        "h": [5, 10, 20]
+      },
+      "formula": "1000 * 9.8 * h",
+      "answerType": "decimal",
+      "unit": "Pa"
+    },
+    {
+      "template": "A liquid of density {rho} kg/m³ is at a depth of {h} m. What is the gauge pressure? (g = 9.8 m/s²)",
+      "variables": {
+        "rho": [800, 1200, 13600],
+        "h": [2, 5, 0.5]
+      },
+      "formula": "rho * 9.8 * h",
+      "answerType": "decimal",
+      "unit": "Pa"
+    },
+    {
+      "template": "A diver is at {h} m depth in seawater (ρ = 1025 kg/m³). What is the gauge pressure at that depth? (g = 9.8 m/s²)",
+      "variables": {
+        "h": [10, 30, 50]
+      },
+      "formula": "1025 * 9.8 * h",
+      "answerType": "decimal",
+      "unit": "Pa"
+    },
+    {
+      "template": "What is the total pressure at {h} m depth in water? Atmospheric pressure is {p0} Pa. (ρ = 1000 kg/m³, g = 9.8 m/s²)",
+      "variables": {
+        "h": [10, 5, 20],
+        "p0": [101325, 100000, 101000]
+      },
+      "formula": "p0 + 1000 * 9.8 * h",
+      "answerType": "decimal",
+      "unit": "Pa"
+    }
+  ]
+}

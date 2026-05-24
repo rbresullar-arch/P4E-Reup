@@ -1,0 +1,46 @@
+{
+  "title": "Torque",
+  "questions": [
+    {
+      "template": "What is the torque when a force of {f} N is applied perpendicular to the end of a {r} m wrench?",
+      "variables": {
+        "f": [20, 50, 100],
+        "r": [0.3, 0.5, 0.25]
+      },
+      "formula": "f * r",
+      "answerType": "decimal",
+      "unit": "N·m"
+    },
+    {
+      "template": "A force of {f} N is applied at {theta} degrees to a {r} m lever arm. What is the torque?",
+      "variables": {
+        "f": [50, 100, 200],
+        "r": [0.5, 1, 2],
+        "theta": [30, 45, 60]
+      },
+      "formula": "f * r * sind(theta)",
+      "answerType": "decimal",
+      "unit": "N·m"
+    },
+    {
+      "template": "A {m} kg mass hangs from a horizontal beam {d} m from the pivot. What is the torque due to gravity? (Use g = 9.8 m/s²)",
+      "variables": {
+        "m": [5, 10, 20],
+        "d": [0.5, 1, 2]
+      },
+      "formula": "m * 9.8 * d",
+      "answerType": "decimal",
+      "unit": "N·m"
+    },
+    {
+      "template": "A wheel has a torque of {tau} N·m and a radius of {r} m. What tangential force is being applied at its edge?",
+      "variables": {
+        "tau": [10, 50, 100],
+        "r": [0.5, 0.25, 0.2]
+      },
+      "formula": "tau / r",
+      "answerType": "decimal",
+      "unit": "N"
+    }
+  ]
+}

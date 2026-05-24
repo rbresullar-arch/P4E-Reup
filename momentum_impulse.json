@@ -1,0 +1,47 @@
+{
+  "title": "Linear Momentum/Impulse",
+  "questions": [
+    {
+      "template": "What is the momentum of a {m} kg object moving at {v} m/s?",
+      "variables": {
+        "m": [2, 5, 10],
+        "v": [3, 4, 8]
+      },
+      "formula": "m * v",
+      "answerType": "decimal",
+      "unit": "kg·m/s"
+    },
+    {
+      "template": "A {m} kg ball is accelerated from {v1} m/s to {v2} m/s. What is the impulse?",
+      "variables": {
+        "m": [2, 0.5, 1],
+        "v1": [3, 5, 10],
+        "v2": [8, 15, 25]
+      },
+      "formula": "m * (v2 - v1)",
+      "answerType": "decimal",
+      "unit": "kg·m/s"
+    },
+    {
+      "template": "A force of {f} N is applied for {t} seconds. What is the impulse?",
+      "variables": {
+        "f": [10, 20, 50],
+        "t": [2, 3, 4]
+      },
+      "formula": "f * t",
+      "answerType": "decimal",
+      "unit": "N·s"
+    },
+    {
+      "template": "A {m1} kg object moving at {v1} m/s collides and sticks to a stationary {m2} kg object. What is their common velocity after collision?",
+      "variables": {
+        "m1": [2, 5, 4],
+        "m2": [3, 5, 6],
+        "v1": [10, 8, 5]
+      },
+      "formula": "m1 * v1 / (m1 + m2)",
+      "answerType": "decimal",
+      "unit": "m/s"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "title": "Pascal's Principle",
+  "questions": [
+    {
+      "template": "A hydraulic press has piston areas of {a1} m² and {a2} m². If a force of {f1} N is applied to the small piston, what force is exerted at the large piston?",
+      "variables": {
+        "a1": [0.01, 0.02, 0.005],
+        "a2": [0.5, 1, 0.25],
+        "f1": [100, 50, 200]
+      },
+      "formula": "f1 * a2 / a1",
+      "answerType": "decimal",
+      "unit": "N"
+    },
+    {
+      "template": "A force of {f} N on an area of {a1} m² creates pressure transmitted to a piston of area {a2} m². What is the force on the larger piston?",
+      "variables": {
+        "f": [200, 500, 100],
+        "a1": [0.02, 0.04, 0.01],
+        "a2": [0.4, 1, 0.2]
+      },
+      "formula": "f * a2 / a1",
+      "answerType": "decimal",
+      "unit": "N"
+    },
+    {
+      "template": "In a hydraulic lift, a {f1} N input force on a {a1} cm² piston lifts a load on a {a2} cm² piston. What load can it lift?",
+      "variables": {
+        "f1": [50, 100, 200],
+        "a1": [10, 20, 5],
+        "a2": [200, 500, 100]
+      },
+      "formula": "f1 * a2 / a1",
+      "answerType": "decimal",
+      "unit": "N"
+    },
+    {
+      "template": "A hydraulic system has a small piston of radius {r1} cm and a large piston of radius {r2} cm. If {f1} N is applied to the small piston, what is the output force?",
+      "variables": {
+        "r1": [2, 1, 5],
+        "r2": [10, 20, 25],
+        "f1": [100, 50, 200]
+      },
+      "formula": "f1 * (r2 * r2) / (r1 * r1)",
+      "answerType": "decimal",
+      "unit": "N"
+    }
+  ]
+}

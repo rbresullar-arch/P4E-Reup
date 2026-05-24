@@ -1,0 +1,46 @@
+{
+  "title": "Work",
+  "questions": [
+    {
+      "template": "What is the work done when a {f} N force pushes an object {d} m in the direction of the force?",
+      "variables": {
+        "f": [20, 50, 100],
+        "d": [3, 4, 5]
+      },
+      "formula": "f * d",
+      "answerType": "decimal",
+      "unit": "J"
+    },
+    {
+      "template": "A {f} N force is applied at {theta} degrees to the displacement of {d} m. What is the work done?",
+      "variables": {
+        "f": [100, 50, 200],
+        "d": [5, 10, 4],
+        "theta": [30, 45, 60]
+      },
+      "formula": "f * d * cosd(theta)",
+      "answerType": "decimal",
+      "unit": "J"
+    },
+    {
+      "template": "How much work is needed to lift a {m} kg object to a height of {h} m? (Use g = 9.8 m/s²)",
+      "variables": {
+        "m": [5, 10, 20],
+        "h": [2, 3, 5]
+      },
+      "formula": "m * 9.8 * h",
+      "answerType": "decimal",
+      "unit": "J"
+    },
+    {
+      "template": "A spring with spring constant {k} N/m is compressed by {x} m. How much elastic potential energy is stored?",
+      "variables": {
+        "k": [200, 500, 1000],
+        "x": [0.1, 0.2, 0.05]
+      },
+      "formula": "0.5 * k * x * x",
+      "answerType": "decimal",
+      "unit": "J"
+    }
+  ]
+}

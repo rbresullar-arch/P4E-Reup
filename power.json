@@ -1,0 +1,46 @@
+{
+  "title": "Power",
+  "questions": [
+    {
+      "template": "How much power is delivered when {w} J of work is done in {t} seconds?",
+      "variables": {
+        "w": [100, 500, 1000],
+        "t": [5, 10, 20]
+      },
+      "formula": "w / t",
+      "answerType": "decimal",
+      "unit": "W"
+    },
+    {
+      "template": "A {f} N force pushes an object at constant {v} m/s. What is the power delivered?",
+      "variables": {
+        "f": [50, 100, 200],
+        "v": [2, 5, 10]
+      },
+      "formula": "f * v",
+      "answerType": "decimal",
+      "unit": "W"
+    },
+    {
+      "template": "A {p} W motor lifts a {m} kg mass. At what constant speed can it lift the mass? (Use g = 9.8 m/s²)",
+      "variables": {
+        "p": [490, 980, 196],
+        "m": [10, 20, 5]
+      },
+      "formula": "p / (m * 9.8)",
+      "answerType": "decimal",
+      "unit": "m/s"
+    },
+    {
+      "template": "An elevator lifts {m} kg to a height of {h} m in {t} seconds. What is the power output? (Use g = 9.8 m/s²)",
+      "variables": {
+        "m": [200, 500, 1000],
+        "h": [10, 20, 5],
+        "t": [5, 10, 4]
+      },
+      "formula": "m * 9.8 * h / t",
+      "answerType": "decimal",
+      "unit": "W"
+    }
+  ]
+}

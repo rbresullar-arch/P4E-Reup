@@ -1,0 +1,45 @@
+{
+  "title": "Force",
+  "questions": [
+    {
+      "template": "What force is required to accelerate a {m} kg object at {a} m/s²?",
+      "variables": {
+        "m": [5, 10, 25],
+        "a": [2, 3, 4]
+      },
+      "formula": "m * a",
+      "answerType": "decimal",
+      "unit": "N"
+    },
+    {
+      "template": "An object weighs {w} N on Earth. What is its mass? (Use g = 9.8 m/s²)",
+      "variables": {
+        "w": [98, 196, 49]
+      },
+      "formula": "w / 9.8",
+      "answerType": "decimal",
+      "unit": "kg"
+    },
+    {
+      "template": "A {m} kg object slides on a surface with coefficient of friction {mu}. What is the friction force? (Use g = 9.8 m/s²)",
+      "variables": {
+        "m": [10, 20, 15],
+        "mu": [0.2, 0.3, 0.4]
+      },
+      "formula": "mu * m * 9.8",
+      "answerType": "decimal",
+      "unit": "N"
+    },
+    {
+      "template": "A {f1} N force pushes east and a {f2} N force pushes west on a {m} kg object. What is the magnitude of acceleration?",
+      "variables": {
+        "f1": [50, 80, 100],
+        "f2": [20, 30, 40],
+        "m": [10, 5, 20]
+      },
+      "formula": "(f1 - f2) / m",
+      "answerType": "decimal",
+      "unit": "m/s²"
+    }
+  ]
+}

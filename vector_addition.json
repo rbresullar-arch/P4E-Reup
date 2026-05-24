@@ -1,0 +1,45 @@
+{
+  "title": "Vector Addition",
+  "questions": [
+    {
+      "template": "Two forces act on an object. Force A is {fa} N pointing east, and Force B is {fb} N pointing north. What is the magnitude of the resultant force?",
+      "variables": {
+        "fa": [3, 6, 12],
+        "fb": [4, 8, 9]
+      },
+      "formula": "Math.sqrt(fa*fa + fb*fb)",
+      "answerType": "decimal",
+      "unit": "N"
+    },
+    {
+      "template": "A boat travels {a} km east, then {b} km north. What is the magnitude of its displacement?",
+      "variables": {
+        "a": [5, 7, 15],
+        "b": [12, 24, 8]
+      },
+      "formula": "Math.sqrt(a*a + b*b)",
+      "answerType": "decimal",
+      "unit": "km"
+    },
+    {
+      "template": "Two perpendicular forces of {f1} N and {f2} N act on a particle. What angle does the resultant make with the {f1} N force?",
+      "variables": {
+        "f1": [3, 8, 5],
+        "f2": [4, 15, 12]
+      },
+      "formula": "Math.atan(f2/f1) * 180 / Math.PI",
+      "answerType": "decimal",
+      "unit": "degrees"
+    },
+    {
+      "template": "A vector has magnitude {m} and makes an angle of {theta} degrees with the x-axis. What is the x-component?",
+      "variables": {
+        "m": [10, 25, 50],
+        "theta": [30, 45, 60]
+      },
+      "formula": "m * cosd(theta)",
+      "answerType": "decimal",
+      "unit": ""
+    }
+  ]
+}
