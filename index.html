@@ -226,8 +226,9 @@ input[type=text]:focus{border-color:var(--text);}
     </div>
     <button class="btn ghost sm" onclick="goHub()">← Hub</button>
   </div>
-  <div class="copy-note">Copy this encoded dump and paste into your decoder tool.</div>
-  <div class="summary-dump" id="sum-dump"></div>
+  <div id="sum-stats" style="font-size:12px;color:var(--dim);line-height:1.7;border:var(--line);padding:12px 14px;"></div>
+  <div class="copy-note">Copy this encoded dump and paste it into the PHYS 111 Score Decoder.</div>
+  <textarea id="sum-dump" readonly style="width:100%;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.5;background:var(--bg2);border:var(--line);padding:14px;min-height:240px;max-height:50vh;resize:vertical;color:var(--text);word-break:break-all;white-space:pre-wrap;"></textarea>
   <button class="btn" onclick="copySummary()">Copy to Clipboard</button>
 </div>
 
@@ -362,7 +363,7 @@ function goHub() {
 function getSlot(prefix) {
   // Returns first available slot s1/s2/s3, or null if all taken
   for (const s of ['s1','s2','s3']) {
-    const d = lsGet(`${prefix}_${s}`);
+    const d = lsGet(`${prefix}::${s}`);
     if (!d) return s;
   }
   return null; // all taken
@@ -371,7 +372,7 @@ function getSlot(prefix) {
 function getBestScore(prefix, total) {
   let best = null;
   for (const s of ['s1','s2','s3']) {
-    const d = lsGet(`${prefix}_${s}`);
+    const d = lsGet(`${prefix}::${s}`);
     if (d) { if (best === null || d.score > best) best = d.score; }
   }
   return best;
@@ -381,7 +382,7 @@ function renderTopicGrid() {
   const grid = document.getElementById('topic-grid');
   grid.innerHTML = '';
   TOPICS.forEach(t => {
-    const prefix = `p4e_quiz_${studentName}_${t.id}`;
+    const prefix = `p4e::quiz::${studentName}::${t.id}`;
     const best = getBestScore(prefix, 4);
     const slot = getSlot(prefix);
     const div = document.createElement('div');
@@ -399,7 +400,7 @@ function renderExamList() {
   const list = document.getElementById('exam-list');
   list.innerHTML = '';
   EXAMS.forEach(ex => {
-    const prefix = `p4e_exam_${studentName}_${ex.id}`;
+    const prefix = `p4e::exam::${studentName}::${ex.id}`;
     const best = getBestScore(prefix, ex.items);
     const slot = getSlot(prefix);
     const div = document.createElement('div');
@@ -418,7 +419,7 @@ function renderExamList() {
 }
 
 function renderCircuitStatus() {
-  const d = lsGet(`p4e_circuit_${studentName}_s1`);
+  const d = lsGet(`p4e::circuit::${studentName}::s1`);
   document.getElementById('circuit-status').textContent = d ? `Best: ${d.score}/10000 pts` : 'Not started';
 }
 
@@ -427,7 +428,7 @@ function renderCircuitStatus() {
 // ═══════════════════════════════════════════
 function startExam(examId) {
   const ex = EXAMS.find(e => e.id === examId);
-  const prefix = `p4e_exam_${studentName}_${examId}`;
+  const prefix = `p4e::exam::${studentName}::${examId}`;
   const slot = getSlot(prefix);
   if (!slot) return;
 
@@ -573,7 +574,7 @@ function finishExam(mode) {
     mode,
     answers: activeExam.answers,
   };
-  lsSet(`${activeExam.prefix}_${activeExam.slot}`, record);
+  lsSet(`${activeExam.prefix}::${activeExam.slot}`, record);
 
   // Show result
   document.getElementById('res-label').textContent = `${activeExam.ex.title} · ${activeExam.slot.toUpperCase()}`;
@@ -862,9 +863,9 @@ function initCircuitGame() {
     cScores.forEach(s=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td style="padding:6px;">${s.puzzleId}</td><td style="padding:6px;">${s.title}</td><td style="padding:6px;text-align:center;">${s.solved?'✅':'❌'}</td><td style="padding:6px;text-align:right;font-weight:700;">${s.score}</td>`; tbody.appendChild(tr); });
 
     // Save to localStorage
-    const prefix = `p4e_circuit_${studentName}`;
+    const prefix = `p4e::circuit::${studentName}`;
     const slot = getSlot(prefix);
-    if (slot) lsSet(`${prefix}_${slot}`, { score: totalScore, total: maxScore, date: new Date().toISOString(), puzzles: cScores });
+    if (slot) lsSet(`${prefix}::${slot}`, { score: totalScore, total: maxScore, dateTime: new Date().toISOString(), duration: 0, set: slot, tabSwitches: 0, fastAnswers: 0, mode: 'complete', puzzles: cScores });
     renderCircuitStatus();
     cShow('results');
   }
@@ -875,34 +876,109 @@ function initCircuitGame() {
 // ═══════════════════════════════════════════
 function showSummary() {
   document.getElementById('sum-name').textContent = studentName;
-  // Collect all relevant localStorage keys for this student
-  const raw = {};
+
+  // Collect & decrypt all student records into compact format
+  const records = [];
+  let totalTabs = 0, totalFast = 0;
+  let quizCount = 0, examCount = 0, circuitCount = 0;
+
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && (k.includes(studentName) || k === 'p4e_name')) {
-      raw[k] = localStorage.getItem(k);
+    if (!k || !k.startsWith('p4e::')) continue;
+    if (!k.includes(`::${studentName}::`)) continue;
+
+    const rec = lsGet(k);
+    if (!rec) continue;
+
+    // Parse key: p4e::{type}::{name}::{topic_or_examid}::{slot}  OR  p4e::circuit::{name}::{slot}
+    const parts = k.split('::');
+    const type = parts[1];
+    let ref = '';
+    let slot = '';
+    if (type === 'circuit') {
+      ref = '';
+      slot = parts[3] || '';
+    } else {
+      ref = parts[3] || '';
+      slot = parts[4] || '';
     }
+
+    // Convert ISO date to Unix timestamp (compact)
+    let ts = 0;
+    try { ts = Math.floor(new Date(rec.dateTime || rec.date).getTime() / 1000); } catch(e){}
+
+    // Build COMPACT record — single-letter field names
+    // a=activity_type, r=ref(topic/exam), x=set_slot, s=score, n=total,
+    // d=timestamp, u=duration_sec, t=tabSwitches, f=fastAnswers, m=mode
+    const compact = {
+      a: type.charAt(0),   // 'q', 'e', or 'c'
+      r: ref,
+      x: slot,
+      s: rec.score || 0,
+      n: rec.total || 0,
+      d: ts,
+      u: rec.duration || 0,
+      t: rec.tabSwitches || 0,
+      f: rec.fastAnswers || 0,
+    };
+    if (rec.mode && rec.mode !== 'complete') compact.m = rec.mode;
+
+    records.push(compact);
+    totalTabs += compact.t;
+    totalFast += compact.f;
+    if (type === 'quiz') quizCount++;
+    else if (type === 'exam') examCount++;
+    else if (type === 'circuit') circuitCount++;
   }
+
+  // Stats display
+  let statsHTML = `<strong style="color:var(--text);">${quizCount}</strong> quiz · <strong style="color:var(--text);">${examCount}</strong> exam · <strong style="color:var(--text);">${circuitCount}</strong> circuit set(s)`;
+  if (totalTabs > 0 || totalFast > 0) {
+    statsHTML += `<br><span style="color:var(--warn);">⚑ Total tab switches: ${totalTabs} · Fast answers: ${totalFast}</span>`;
+  }
+  document.getElementById('sum-stats').innerHTML = statsHTML;
+
+  // Compact payload — single layer of encryption
+  // Format: { v:1, n:name, e:exportedTimestamp, r:[records] }
   const payload = {
-    exportedAt: new Date().toISOString(),
-    student: studentName,
-    data: raw,
+    v: 1,
+    n: studentName,
+    e: Math.floor(Date.now() / 1000),
+    r: records,
   };
-  // Encrypt the whole payload
-  document.getElementById('sum-dump').textContent = xorEncrypt(JSON.stringify(payload));
+
+  document.getElementById('sum-dump').value = xorEncrypt(JSON.stringify(payload));
   show('summary');
 }
 
 function copySummary() {
-  const text = document.getElementById('sum-dump').textContent;
-  navigator.clipboard.writeText(text).then(() => {
+  const ta = document.getElementById('sum-dump');
+  const text = ta.value;
+  // Try modern clipboard API first
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('#screen-summary .btn:not(.ghost)');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    }).catch(() => fallbackCopy(ta));
+  } else {
+    fallbackCopy(ta);
+  }
+}
+
+function fallbackCopy(ta) {
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
     const btn = document.querySelector('#screen-summary .btn:not(.ghost)');
     const orig = btn.textContent;
     btn.textContent = 'Copied!';
     setTimeout(() => { btn.textContent = orig; }, 2000);
-  }).catch(() => {
-    document.getElementById('sum-dump').select && document.getElementById('sum-dump').select();
-  });
+  } catch(e) {
+    alert('Press Ctrl/Cmd+C to copy the selected text.');
+  }
 }
 
 // ═══════════════════════════════════════════
